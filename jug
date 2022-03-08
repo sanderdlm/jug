@@ -40,11 +40,11 @@ foreach ($config->getAll() as $key => $value) {
 }
 
 // Translations
-if ($config->has('default_locale')) {
+if (!$config->has('default_locale')) {
     throw new RuntimeException('Missing config option: default_locale.');
 }
 
-$translator = new Translator($config['default_locale']);
+$translator = new Translator($config->get('default_locale'));
 
 if ($config->has('locales')) {
     foreach ($config->get('locales') as $locale) {
