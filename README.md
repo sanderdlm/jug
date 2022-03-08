@@ -13,4 +13,4 @@ The templates will be parsed by Twig, which means you get access to anything Twi
 symfony/translations is available. You can use {{ 'string'|trans }} in a template, provide the matching value in the `translations` folder and off you go.
 
 ## Optimized images
-Both jpegoptim and optipng are ran on the `assets/output/images` folder.
+Both jpegoptim and optipng run on the `assets/output/images` folder.

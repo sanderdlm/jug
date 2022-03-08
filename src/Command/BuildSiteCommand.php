@@ -1,8 +1,12 @@
 <?php
 
-namespace App\Command;
+declare(strict_types=1);
+
+namespace Jug\Command;
 
 use DOMDocument;
+use DOMElement;
+use Jug\Config\Config;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -22,7 +26,7 @@ class BuildSiteCommand extends Command
     public function __construct(
         private Environment $twig,
         private Filesystem $filesystem,
-        private array $config
+        private Config $config
     ) {
         parent::__construct();
     }
@@ -45,7 +49,8 @@ class BuildSiteCommand extends Command
         $progressBar->start();
 
         if ($this->isMultiLang()) {
-            foreach ($this->config['locales'] as $locale) {
+            foreach ($this->config->get('locales') as $locale) {
+                assert(is_string($locale));
                 $this->setLocale($locale);
 
                 foreach ($finder as $file) {
@@ -72,7 +77,7 @@ class BuildSiteCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function renderTemplate(SplFileInfo $file, ?string $locale = null)
+    private function renderTemplate(SplFileInfo $file, ?string $locale = null): void
     {
         $renderedTemplate = $this->twig->render($file->getFilename());
 
@@ -128,6 +133,7 @@ class BuildSiteCommand extends Command
 
         $nodes = $dom->getElementsByTagName('a');
 
+        /** @var DOMElement $node */
         foreach ($nodes as $node) {
             $link = $node->getAttribute('href');
             if (str_contains($link, '.html')) {
@@ -135,13 +141,20 @@ class BuildSiteCommand extends Command
             }
         }
 
-        return $dom->saveHTML();
+        $output = $dom->saveHTML();
+
+        if ($output) {
+            return $output;
+        }
+
+        return $html;
     }
 
     private function isMultiLang(): bool
     {
-        if (array_key_exists('locales', $this->config) &&
-            count($this->config['locales']) > 1) {
+        if ($this->config->has('locales') &&
+            is_array($this->config->get('locales')) &&
+            count($this->config->get('locales')) > 1) {
             return true;
         }
 

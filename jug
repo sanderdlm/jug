@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../autoload.php';
 
-use App\Command\BuildSiteCommand;
+use Jug\Command\BuildSiteCommand;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
@@ -24,24 +24,29 @@ if (!$filesystem->exists('source') ||
 }
 
 // Config
+if (!is_file('config/jug.php')) {
+    throw new RuntimeException('Missing mandatory config file: config/jug.php');
+}
+
 $config = require 'config/jug.php';
+$config = new Config($config);
 
 // Twig
 $loader = new FilesystemLoader(['source', 'source/_includes', 'source/_layouts']);
 $twig = new Environment($loader);
-foreach ($config as $key => $value) {
+foreach ($config->getAll() as $key => $value) {
     $twig->addGlobal($key, $value);
 }
 
 // Translations
-if (!array_key_exists('default_locale', $config)) {
+if ($config->has('default_locale')) {
     throw new RuntimeException('Missing config option: default_locale.');
 }
 
 $translator = new Translator($config['default_locale']);
 
-if (array_key_exists('locales', $config)) {
-    foreach ($config['locales'] as $locale) {
+if ($config->has('locales')) {
+    foreach ($config->get('locales') as $locale) {
         $translator->addLoader('yaml', new YamlFileLoader());
         $translator->addResource('yaml', 'translations/messages.' . $locale . '.yaml', $locale);
     }
