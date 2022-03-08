@@ -4,7 +4,7 @@ Hacky prototype of very minimal static site generation with PHP.
 TL;DR:
 Write Twig templates -> run `vendor/bin/jug build` -> get multilang HTML.
 
-Will only work if your project adheres to a very specific directory structure.
+Will only work if your project adheres to a very specific directory structure. See [the example repository](https://github.com/dreadnip/jug-template) for the exact structure.
 
 ## Features
 ### Twig
