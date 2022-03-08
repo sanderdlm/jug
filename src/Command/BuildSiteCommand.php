@@ -51,7 +51,7 @@ class BuildSiteCommand extends Command
                 $renderedTemplate = str_replace('assets/', '../assets/', $renderedTemplate);
 
                 $fileSystem->dumpFile(
-                    self::OUTPUT_FOLDER . '/' . $locale . '/' . $file->getFilename(),
+                    self::OUTPUT_FOLDER . '/' . $locale . '/' . $file->getFilenameWithoutExtension() . '.html',
                     $renderedTemplate
                 );
 
