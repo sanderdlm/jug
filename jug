@@ -15,33 +15,41 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 $application = new Application();
-$fileSystem = new Filesystem();
+$filesystem = new Filesystem();
 
-if (!$fileSystem->exists('source') ||
-    !$fileSystem->exists('source/_includes') ||
-    !$fileSystem->exists('source/_layouts')) {
+if (!$filesystem->exists('source') ||
+    !$filesystem->exists('source/_includes') ||
+    !$filesystem->exists('source/_layouts')) {
     throw new RuntimeException('Invalid project structure.');
 }
 
-// Load config
+// Config
 $config = require 'config/jug.php';
 
-// Build Translator dependency
-$translator = new Translator($config['default_locale']);
-foreach ($config['locales'] as $locale) {
-    $translator->addLoader('yaml', new YamlFileLoader());
-    $translator->addResource('yaml', 'translations/messages.' . $locale . '.yaml', $locale);
-}
-
-// Build Twig dependency
+// Twig
 $loader = new FilesystemLoader(['source', 'source/_includes', 'source/_layouts']);
 $twig = new Environment($loader);
-foreach ($config['globals'] as $key => $value) {
+foreach ($config as $key => $value) {
     $twig->addGlobal($key, $value);
 }
+
+// Translations
+if (!array_key_exists('default_locale', $config)) {
+    throw new RuntimeException('Missing config option: default_locale.');
+}
+
+$translator = new Translator($config['default_locale']);
+
+if (array_key_exists('locales', $config)) {
+    foreach ($config['locales'] as $locale) {
+        $translator->addLoader('yaml', new YamlFileLoader());
+        $translator->addResource('yaml', 'translations/messages.' . $locale . '.yaml', $locale);
+    }
+}
+
 $twig->addExtension(new TranslationExtension($translator));
 
 // Register our command
-$application->add(new BuildSiteCommand($twig));
+$application->add(new BuildSiteCommand($twig, $filesystem, $config));
 
 $application->run();
