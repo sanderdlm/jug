@@ -3,10 +3,9 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../autoload.php';
 
 use App\Command\BuildSiteCommand;
-use App\Command\TranslateSourceCommand;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
@@ -44,6 +43,5 @@ $twig->addExtension(new TranslationExtension($translator));
 
 // Register our command
 $application->add(new BuildSiteCommand($twig));
-$application->add(new TranslateSourceCommand($twig));
 
 $application->run();
