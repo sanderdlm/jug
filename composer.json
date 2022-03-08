@@ -1,5 +1,6 @@
 {
     "name": "dreadnip/jug",
+    "description": "Turn Twig templates into a static multi-lang site.",
     "minimum-stability": "dev",
     "require": {
         "php": "^8.1",
