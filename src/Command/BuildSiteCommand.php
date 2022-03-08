@@ -71,9 +71,8 @@ class BuildSiteCommand extends Command
 
     private function setLocale(string $locale): void
     {
-        /** @var Translator $translator */
-        $translator = $this->twig->getExtension(TranslationExtension::class)->getTranslator();
-        $translator->setLocale($locale);
+        assert($this->twig->getExtension(TranslationExtension::class)->getTranslator() instanceof Translator);
+        $this->twig->getExtension(TranslationExtension::class)->getTranslator()->setLocale($locale);
     }
 
     private function compressImages(string $imageFolder): void
