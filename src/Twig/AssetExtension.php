@@ -22,6 +22,10 @@ class AssetExtension extends AbstractExtension
 
     public function addHash(string $path): string
     {
+        if (!$this->config->has('hash')) {
+            throw new \RuntimeException('The asset Twig function was used but no hash is set in the config. Please provide a valid hash first.');
+        }
+
         $extension = pathinfo($path, PATHINFO_EXTENSION);
         $baseName = basename($path, ".{$extension}");
         $hashedFile = $baseName . '.' . $this->config->get('hash') . '.' . $extension;

@@ -70,7 +70,9 @@ class BuildSiteCommand extends Command
         // TODO: CSS? Do we need Sass/JS transpile?
         $this->filesystem->mirror(self::SOURCE_FOLDER . '/assets', self::OUTPUT_FOLDER . '/assets');
 
-        $this->addHash(self::OUTPUT_FOLDER . '/assets');
+        if ($this->config->has('hash')) {
+            $this->addHash(self::OUTPUT_FOLDER . '/assets');
+        }
 
         $this->compressImages(self::OUTPUT_FOLDER . '/assets/images');
 

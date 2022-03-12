@@ -4,6 +4,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^8.1",
+        "ext-dom": "*",
         "symfony/console": "^6.0",
         "twig/twig": "^3.3",
         "symfony/filesystem": "^6.0",
