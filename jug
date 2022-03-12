@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../autoload.php';
 
+use Jug\Twig\AssetExtension;
 use Jug\Command\BuildSiteCommand;
 use Jug\Config\Config;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -64,6 +65,7 @@ if ($config->has('locales')) {
 }
 
 $twig->addExtension(new TranslationExtension($translator));
+$twig->addExtension(new AssetExtension($config));
 
 // Register our command
 $application->add(new BuildSiteCommand($twig, $filesystem, $config));

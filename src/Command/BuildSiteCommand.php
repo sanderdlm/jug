@@ -70,6 +70,8 @@ class BuildSiteCommand extends Command
         // TODO: CSS? Do we need Sass/JS transpile?
         $this->filesystem->mirror(self::SOURCE_FOLDER . '/assets', self::OUTPUT_FOLDER . '/assets');
 
+        $this->addHash(self::OUTPUT_FOLDER . '/assets');
+
         $this->compressImages(self::OUTPUT_FOLDER . '/assets/images');
 
         $progressBar->finish();
@@ -159,5 +161,23 @@ class BuildSiteCommand extends Command
         }
 
         return false;
+    }
+
+    public function addHash(string $assetFolder)
+    {
+        $finder = new Finder();
+
+        $finder->in($assetFolder)->files();
+
+        foreach ($finder as $file) {
+            $extension = $file->getExtension();
+            $baseName = $file->getFilenameWithoutExtension();
+            $hashedName = $baseName . '.' . $this->config->get('hash') . '.' . $extension;
+
+            $this->filesystem->rename(
+                $file->getRealPath(),
+                str_replace($baseName . '.' . $extension, $hashedName, $file->getRealPath())
+            );
+        }
     }
 }
