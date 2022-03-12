@@ -45,11 +45,21 @@ if (!$config->has('default_locale')) {
 }
 
 $translator = new Translator($config->get('default_locale'));
+$translator->addLoader('yaml', new YamlFileLoader());
 
 if ($config->has('locales')) {
     foreach ($config->get('locales') as $locale) {
-        $translator->addLoader('yaml', new YamlFileLoader());
-        $translator->addResource('yaml', 'translations/messages.' . $locale . '.yaml', $locale);
+        $translationPath ='translations/messages.' . $locale . '.yaml';
+
+        if (is_file($translationPath)) {
+            $translator->addResource('yaml', $translationPath, $locale);
+        }
+    }
+} else {
+    $translationPath = 'translations/messages.' . $config->get('default_locale') . '.yaml';
+
+    if (is_file($translationPath)) {
+        $translator->addResource('yaml', $translationPath, $config->get('default_locale'));
     }
 }
 
