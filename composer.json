@@ -1,10 +1,10 @@
 {
     "name": "dreadnip/jug",
     "description": "Turn Twig templates into a static multi-lang site.",
-    "minimum-stability": "dev",
     "require": {
         "php": "^8.1",
         "ext-dom": "*",
+        "ext-libxml": "*",
         "symfony/console": "^6.0",
         "twig/twig": "^3.3",
         "symfony/filesystem": "^6.0",
@@ -12,7 +12,8 @@
         "symfony/translation": "^6.0",
         "symfony/twig-bridge": "^6.0",
         "symfony/yaml": "^6.0",
-        "symfony/config": "^6.0"
+        "symfony/config": "^6.0",
+        "michelf/php-markdown": "dev-lib"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.0",
