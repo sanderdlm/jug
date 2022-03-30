@@ -22,6 +22,7 @@ jobs:
     - name: "Install PHP"
       uses: "shivammathur/setup-php@v2"
       with:
+        extensions: inotify
         coverage: "none"
         php-version: "${{ matrix.php-version }}"
 
@@ -48,6 +49,7 @@ jobs:
     - name: "Install PHP"
       uses: "shivammathur/setup-php@v2"
       with:
+        extensions: inotify
         coverage: "none"
         php-version: "${{ matrix.php-version }}"
 

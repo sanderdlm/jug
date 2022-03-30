@@ -79,7 +79,7 @@ class BuildCommand extends Command
 
         $progressBar->finish();
 
-        $output->writeln('<info>Building done!</info>');
+        $output->writeln(' <info>Building done!</info>');
 
         return Command::SUCCESS;
     }
