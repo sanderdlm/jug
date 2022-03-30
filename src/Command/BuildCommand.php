@@ -22,6 +22,10 @@ class BuildCommand extends Command
 {
     private const SOURCE_FOLDER = 'source';
     private const OUTPUT_FOLDER = 'output';
+    private const EXCLUDES = [
+        '_includes',
+        '_layouts' ,
+    ];
 
     public function __construct(
         private Environment $twig,
@@ -43,7 +47,7 @@ class BuildCommand extends Command
         $this->filesystem->remove(self::OUTPUT_FOLDER);
         $this->filesystem->mkdir(self::OUTPUT_FOLDER);
 
-        $finder->in(self::SOURCE_FOLDER)->depth(0)->files()->name('*.twig');
+        $finder->in(self::SOURCE_FOLDER)->exclude(self::EXCLUDES)->files()->name('*.twig');
 
         $output->writeln('<info>Building site...</info>');
         $progressBar = new ProgressBar($output, count($finder));
@@ -86,24 +90,26 @@ class BuildCommand extends Command
 
     private function renderTemplate(SplFileInfo $file, ?string $locale = null): void
     {
-        $renderedTemplate = $this->twig->render($file->getFilename());
+        $renderedTemplate = $this->twig->render($file->getRelativePathname());
 
         $renderedTemplate = str_replace('assets/', '../assets/', $renderedTemplate);
+
+        $outputFormat = str_replace('twig', 'html', $file->getRelativePathname());
 
         if ($locale !== null) {
             $renderedTemplate = $this->makeInternalLinksLocaleAware($renderedTemplate, $locale);
 
             $outputPath = sprintf(
-                '%s/%s/%s.html',
+                '%s/%s/%s',
                 self::OUTPUT_FOLDER,
                 $locale,
-                $file->getFilenameWithoutExtension()
+                $outputFormat
             );
         } else {
             $outputPath = sprintf(
-                '%s/%s.html',
+                '%s/%s',
                 self::OUTPUT_FOLDER,
-                $file->getFilenameWithoutExtension()
+                $outputFormat
             );
         }
 
