@@ -13,7 +13,8 @@
         "symfony/twig-bridge": "^6.0",
         "symfony/yaml": "^6.0",
         "symfony/config": "^6.0",
-        "michelf/php-markdown": "^1.9"
+        "michelf/php-markdown": "^1.9",
+        "krowinski/php-inotify": "^2.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.0",

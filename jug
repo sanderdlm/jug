@@ -5,8 +5,9 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../autoload.php';
 
+use Jug\Command\WatchCommand;
 use Jug\Twig\AssetExtension;
-use Jug\Command\BuildSiteCommand;
+use Jug\Command\BuildCommand;
 use Jug\Config\Config;
 use Jug\Twig\MarkdownExtension;
 use Michelf\Markdown;
@@ -70,7 +71,8 @@ $twig->addExtension(new TranslationExtension($translator));
 $twig->addExtension(new AssetExtension($config));
 $twig->addExtension(new MarkdownExtension(new Markdown()));
 
-// Register our command
-$application->add(new BuildSiteCommand($twig, $filesystem, $config));
+// Register our commands
+$application->add(new BuildCommand($twig, $filesystem, $config));
+$application->add(new WatchCommand());
 
 $application->run();

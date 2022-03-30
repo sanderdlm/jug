@@ -18,7 +18,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 
-class BuildSiteCommand extends Command
+class BuildCommand extends Command
 {
     private const SOURCE_FOLDER = 'source';
     private const OUTPUT_FOLDER = 'output';
