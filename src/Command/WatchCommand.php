@@ -17,11 +17,6 @@ use Symfony\Component\Finder\Finder;
 class WatchCommand extends Command
 {
     private const SOURCE_FOLDER = 'source';
-
-    public function __construct(
-    ) {
-        parent::__construct();
-    }
     protected static $defaultName = 'watch';
 
     protected function configure(): void
@@ -30,9 +25,9 @@ class WatchCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('<info>Watching the files in '  . self::SOURCE_FOLDER. '...</info>');
-        $command = $this->getApplication()->find('build');
-        $flags = InotifyEventCodeEnum::ON_CLOSE_WRITE()->getValue();
+        $output->writeln('<info>Watching the files in '  . self::SOURCE_FOLDER . '...</info>');
+
+        $flags = intval(InotifyEventCodeEnum::ON_CLOSE_WRITE()->getValue());
 
         $finder = new Finder();
         $finder->in(self::SOURCE_FOLDER)->directories();
@@ -42,15 +37,30 @@ class WatchCommand extends Command
             $flags,
             'fileChanged'
         );
-        
+
         foreach ($finder as $directory) {
             $collection->push(new WatchedResource($directory->getPathname(), $flags, 'fileChanged'));
         }
 
         (new InotifyConsumerFactory())
-            ->registerSubscriber(new InotifyModifiedSubscriber($command, $output))
+            ->registerSubscriber(new InotifyModifiedSubscriber($this->getBuildCommand(), $output))
             ->consume($collection);
 
         return Command::SUCCESS;
+    }
+
+    private function getBuildCommand(): ?BuildCommand
+    {
+        if (!$application = $this->getApplication()) {
+            return null;
+        }
+
+        $command = $application->find('build');
+
+        if ($command instanceof BuildCommand) {
+            return $command;
+        }
+
+        return null;
     }
 }

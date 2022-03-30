@@ -7,6 +7,7 @@ require __DIR__ . '/../../autoload.php';
 
 use Jug\Command\WatchCommand;
 use Jug\Twig\AssetExtension;
+use Jug\Twig\HighlightExtension;
 use Jug\Command\BuildCommand;
 use Jug\Config\Config;
 use Jug\Twig\MarkdownExtension;
@@ -17,7 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
+use Jug\Twig\DynamicFilesystemLoader;
 
 $application = new Application();
 $filesystem = new Filesystem();
@@ -37,8 +38,11 @@ $config = require 'config/jug.php';
 $config = new Config($config);
 
 // Twig
-$loader = new FilesystemLoader(['source', 'source/_includes', 'source/_layouts']);
-$twig = new Environment($loader);
+$loader = new DynamicFilesystemLoader(['source', 'source/_includes', 'source/_layouts']);
+$twig = new Environment($loader, [
+    'auto_reload' => true
+]);
+
 foreach ($config->getAll() as $key => $value) {
     $twig->addGlobal($key, $value);
 }
@@ -70,6 +74,7 @@ if ($config->has('locales')) {
 $twig->addExtension(new TranslationExtension($translator));
 $twig->addExtension(new AssetExtension($config));
 $twig->addExtension(new MarkdownExtension(new Markdown()));
+$twig->addExtension(new HighlightExtension());
 
 // Register our commands
 $application->add(new BuildCommand($twig, $filesystem, $config));

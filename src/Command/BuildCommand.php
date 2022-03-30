@@ -45,11 +45,12 @@ class BuildCommand extends Command
 
         $finder->in(self::SOURCE_FOLDER)->depth(0)->files()->name('*.twig');
 
+        $output->writeln('<info>Building site...</info>');
         $progressBar = new ProgressBar($output, count($finder));
         $progressBar->start();
 
-        if ($this->isMultiLang()) {
-            foreach ($this->config->get('locales') as $locale) {
+        if (null !== $locales = $this->getLocales()) {
+            foreach ($locales as $locale) {
                 assert(is_string($locale));
                 $this->setLocale($locale);
 
@@ -77,6 +78,8 @@ class BuildCommand extends Command
         $this->compressImages(self::OUTPUT_FOLDER . '/assets/images');
 
         $progressBar->finish();
+
+        $output->writeln('<info>Building done!</info>');
 
         return Command::SUCCESS;
     }
@@ -122,7 +125,7 @@ class BuildCommand extends Command
         foreach ($finder as $image) {
             if ($image->getExtension() === 'jpeg' || $image->getExtension() === 'jpg') {
                 shell_exec('jpegoptim -q -m85 -s --all-progressive ' . $image->getRealPath());
-            } else if ($image->getExtension() === 'png') {
+            } elseif ($image->getExtension() === 'png') {
                 shell_exec('optipng -o2 -i 0 -strip all -silent ' . $image->getRealPath());
             }
         }
@@ -131,7 +134,7 @@ class BuildCommand extends Command
     private function makeInternalLinksLocaleAware(string $html, string $locale): string
     {
         libxml_use_internal_errors(true);
-        $dom = new DOMDocument;
+        $dom = new DOMDocument();
         $dom->loadHTML($html);
         libxml_use_internal_errors(false);
 
@@ -154,18 +157,22 @@ class BuildCommand extends Command
         return $html;
     }
 
-    private function isMultiLang(): bool
+    /**
+     * @return array<string>|null
+     */
+    private function getLocales(): ?array
     {
-        if ($this->config->has('locales') &&
-            is_array($this->config->get('locales')) &&
-            count($this->config->get('locales')) > 1) {
-            return true;
+        if (
+            $this->config->has('locales') &&
+            is_array($this->config->get('locales'))
+        ) {
+            return $this->config->get('locales');
         }
 
-        return false;
+        return null;
     }
 
-    public function addHash(string $assetFolder)
+    public function addHash(string $assetFolder): void
     {
         $finder = new Finder();
 

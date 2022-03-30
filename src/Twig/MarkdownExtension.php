@@ -20,21 +20,23 @@ class MarkdownExtension extends AbstractExtension
         ];
     }
 
-    public function loadFile(string $path, string $locale): ?string
+    public function loadFile(string $path, string $locale = null): ?string
     {
         $content = $this->getFile($path) ?? $this->getFile('source/' . $path) ?? null;
 
         if ($content !== null) {
             return $this->parser->transform($content);
         }
-        
+
         return null;
     }
 
     private function getFile(string $path): ?string
     {
         if (is_file($path)) {
-            return file_get_contents($path);
+            if ($content = file_get_contents($path)) {
+                return $content;
+            }
         }
 
         return null;
