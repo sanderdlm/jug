@@ -14,9 +14,7 @@ final class InotifyModifiedSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private ?BuildCommand $command,
-        private OutputInterface $output,
-        /** @var array<string, int> $cache */
-        private array $cache = [],
+        private OutputInterface $output
     ) {
     }
 
@@ -27,25 +25,6 @@ final class InotifyModifiedSubscriber implements EventSubscriberInterface
 
     public function onInotifyEvent(InotifyEvent $event): void
     {
-        $buffer = 2;
-        $fileName = $event->getFileName();
-
-        // Work-around for temp files with a tilde appendix
-        if (substr($fileName, -1) === '~') {
-            $fileName = substr($fileName, 0, -1);
-        }
-
-        // Prevent duplicate events
-        if (
-            array_key_exists($fileName, $this->cache) &&
-            $this->cache[$fileName] >= time() - $buffer &&
-            $this->cache[$fileName] <= time() + $buffer
-        ) {
-            return;
-        }
-
-        $this->cache[$fileName] = time();
-
         $this->command?->run(new ArrayInput([]), $this->output);
     }
 }

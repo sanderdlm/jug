@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jug\Command;
 
-use Inotify\WatchedResource;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,24 +26,22 @@ class WatchCommand extends Command
     {
         $output->writeln('<info>Watching the files in '  . self::SOURCE_FOLDER . '...</info>');
 
-        $flags = intval(InotifyEventCodeEnum::ON_CLOSE_WRITE()->getValue());
-
         $finder = new Finder();
         $finder->in(self::SOURCE_FOLDER)->directories();
 
-        $collection = WatchedResourceCollection::createSingle(
-            self::SOURCE_FOLDER,
-            $flags,
-            'fileChanged'
-        );
+        $paths = [self::SOURCE_FOLDER];
 
         foreach ($finder as $directory) {
-            $collection->push(new WatchedResource($directory->getPathname(), $flags, 'fileChanged'));
+            $paths[] = $directory->getPathname();
         }
 
         (new InotifyConsumerFactory())
             ->registerSubscriber(new InotifyModifiedSubscriber($this->getBuildCommand(), $output))
-            ->consume($collection);
+            ->consume(WatchedResourceCollection::fromArray(
+                $paths,
+                InotifyEventCodeEnum::ON_CLOSE_WRITE,
+                'fileChanged'
+            ));
 
         return Command::SUCCESS;
     }
