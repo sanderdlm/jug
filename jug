@@ -11,6 +11,7 @@ use Jug\Twig\HighlightExtension;
 use Jug\Command\BuildCommand;
 use Jug\Config\Config;
 use Jug\Twig\MarkdownExtension;
+use Jug\Twig\SqliteExtension;
 use Michelf\Markdown;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Console\Application;
@@ -75,6 +76,7 @@ $twig->addExtension(new TranslationExtension($translator));
 $twig->addExtension(new AssetExtension($config));
 $twig->addExtension(new MarkdownExtension(new Markdown()));
 $twig->addExtension(new HighlightExtension());
+$twig->addExtension(new SqliteExtension());
 
 // Register our commands
 $application->add(new BuildCommand($twig, $filesystem, $config));
