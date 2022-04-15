@@ -7,6 +7,7 @@ namespace Jug\Command;
 use DOMDocument;
 use DOMElement;
 use Jug\Config\Config;
+use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -75,11 +76,11 @@ class BuildCommand extends Command
         // TODO: CSS? Do we need Sass/JS transpile?
         $this->filesystem->mirror(self::SOURCE_FOLDER . '/assets', self::OUTPUT_FOLDER . '/assets');
 
+        $this->compressImages(self::OUTPUT_FOLDER . '/assets/images');
+
         if ($this->config->has('hash')) {
             $this->addHash(self::OUTPUT_FOLDER . '/assets');
         }
-
-        $this->compressImages(self::OUTPUT_FOLDER . '/assets/images');
 
         $progressBar->finish();
 
@@ -125,16 +126,38 @@ class BuildCommand extends Command
 
     private function compressImages(string $imageFolder): void
     {
+        if (!$this->config->has('image_cache')) {
+            throw new RuntimeException('Missing required config option: image_cache.');
+        }
+
+        $cacheContent = file_get_contents($this->config->getString('image_cache'));
+
+        if (!$cacheContent) {
+            throw new RuntimeException('Could\'nt get image cache content.');
+        }
+
+        /** @var array<string, array<string>> $cache */
+        $cache = json_decode($cacheContent, true);
+
         $finder = new Finder();
         $finder->in($imageFolder)->files();
 
+        if (!isset($cache['images']) || !is_array($cache['images'])) {
+            $cache['images'] = [];
+        }
+
         foreach ($finder as $image) {
-            if ($image->getExtension() === 'jpeg' || $image->getExtension() === 'jpg') {
-                shell_exec('jpegoptim -q -m85 -s --all-progressive ' . $image->getRealPath());
-            } elseif ($image->getExtension() === 'png') {
-                shell_exec('optipng -o2 -i 0 -strip all -silent ' . $image->getRealPath());
+            if (!in_array($image->getRealPath(), $cache['images'])) {
+                if ($image->getExtension() === 'jpeg' || $image->getExtension() === 'jpg') {
+                    shell_exec('jpegoptim -q -m85 -s --all-progressive ' . $image->getRealPath());
+                } elseif ($image->getExtension() === 'png') {
+                    shell_exec('optipng -o2 -i 0 -strip all -silent ' . $image->getRealPath());
+                }
+                $cache['images'][] = $image->getRealPath();
             }
         }
+
+        file_put_contents($this->config->getString('image_cache'), json_encode($cache));
     }
 
     private function makeInternalLinksLocaleAware(string $html, string $locale): string
