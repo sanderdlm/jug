@@ -192,10 +192,9 @@ class BuildCommand extends Command
     private function getLocales(): ?array
     {
         if (
-            $this->config->has('locales') &&
-            is_array($this->config->get('locales'))
+            $this->config->has('locales')
         ) {
-            return $this->config->get('locales');
+            return $this->config->getArray('locales');
         }
 
         return null;

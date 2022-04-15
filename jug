@@ -32,7 +32,7 @@ if (!$filesystem->exists('source') ||
 
 // Config
 if (!is_file('config/jug.php')) {
-    throw new RuntimeException('Missing mandatory config file: config/jug.php');
+    throw new RuntimeException('Missing required config file: config/jug.php');
 }
 
 $config = require 'config/jug.php';
@@ -50,14 +50,14 @@ foreach ($config->getAll() as $key => $value) {
 
 // Translations
 if (!$config->has('default_locale')) {
-    throw new RuntimeException('Missing config option: default_locale.');
+    throw new RuntimeException('Missing required config option: default_locale.');
 }
 
-$translator = new Translator($config->get('default_locale'));
+$translator = new Translator($config->getString('default_locale'));
 $translator->addLoader('yaml', new YamlFileLoader());
 
 if ($config->has('locales')) {
-    foreach ($config->get('locales') as $locale) {
+    foreach ($config->getArray('locales') as $locale) {
         $translationPath ='translations/messages.' . $locale . '.yaml';
 
         if (is_file($translationPath)) {
@@ -68,7 +68,7 @@ if ($config->has('locales')) {
     $translationPath = 'translations/messages.' . $config->get('default_locale') . '.yaml';
 
     if (is_file($translationPath)) {
-        $translator->addResource('yaml', $translationPath, $config->get('default_locale'));
+        $translator->addResource('yaml', $translationPath, $config->getString('default_locale'));
     }
 }
 
