@@ -7,6 +7,7 @@ require __DIR__ . '/../../autoload.php';
 
 use Jug\Command\WatchCommand;
 use Jug\Twig\AssetExtension;
+use Jug\Twig\FolderExtension;
 use Jug\Twig\HighlightExtension;
 use Jug\Command\BuildCommand;
 use Jug\Config\Config;
@@ -77,6 +78,7 @@ $twig->addExtension(new AssetExtension($config));
 $twig->addExtension(new MarkdownExtension(new Markdown()));
 $twig->addExtension(new HighlightExtension());
 $twig->addExtension(new SqliteExtension());
+$twig->addExtension(new FolderExtension());
 
 // Register our commands
 $application->add(new BuildCommand($twig, $filesystem, $config));
