@@ -22,7 +22,7 @@ class HighlightExtension extends AbstractExtension
     {
         ini_set("highlight.comment", "#20A672"); //green
         ini_set("highlight.default", "#212121"); //black
-        ini_set("highlight.html", "#E8E8E8"); //light gray
+        ini_set("highlight.html", "#212121"); //light gray
         ini_set("highlight.keyword", "#236e9f; font-weight: bold"); //blue
         ini_set("highlight.string", "#C44B34"); //red
 
