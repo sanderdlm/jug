@@ -43,7 +43,7 @@ class MarkdownExtension extends AbstractExtension
     {
         // remove indentation
         if ($white = substr($content, 0, strspn($content, " \t\r\n\0\x0B"))) {
-            $content = preg_replace("{^$white}m", '', $content);
+            $content = preg_replace("{^$white}m", '', $content) ?? $content;
         }
 
         return $this->parser->transform($content);
