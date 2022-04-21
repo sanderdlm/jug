@@ -26,7 +26,7 @@ class FolderExtension extends AbstractExtension
         $finder->in($path)->files()->name('*.twig');
 
         foreach ($finder as $file) {
-            $files[] = $file->getFilenameWithoutExtension() . '.html';
+            $files[$file->getFilenameWithoutExtension()] = $file->getFilenameWithoutExtension() . '.html';
         }
 
         return $files;
