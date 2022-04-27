@@ -68,7 +68,7 @@ $translator->addLoader('yaml', new YamlFileLoader());
 
 if ($config->has('locales')) {
     foreach ($config->getArray('locales') as $locale) {
-        $translationPath ='translations/messages.' . $locale . '.yaml';
+        $translationPath = 'translations/messages.' . $locale . '.yaml';
 
         if (is_file($translationPath)) {
             $translator->addResource('yaml', $translationPath, $locale);
