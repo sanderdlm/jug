@@ -36,8 +36,8 @@ class Generator
 
         $finder->in($sourceFolder)->exclude('_templates')->files()->name('*.twig');
 
-        if (null !== $locales = $this->getLocales()) {
-            foreach ($locales as $locale) {
+        if ($this->config->has('locales')) {
+            foreach ($this->config->getArray('locales') as $locale) {
                 assert(is_string($locale));
                 $this->setLocale($locale);
 
@@ -99,10 +99,16 @@ class Generator
             throw new RuntimeException('Missing required config option: image_cache.');
         }
 
+        $imageCacheFile = $this->config->getString('image_cache');
+
+        if (!is_file($imageCacheFile)) {
+            $this->filesystem->touch($imageCacheFile);
+        }
+
         $cacheContent = file_get_contents($this->config->getString('image_cache'));
 
         if (!$cacheContent) {
-            throw new RuntimeException('Could\'nt get image cache content.');
+            $cacheContent = '';
         }
 
         /** @var array<string, array<string>> $cache */
@@ -153,20 +159,6 @@ class Generator
         }
 
         return $html;
-    }
-
-    /**
-     * @return array<string>|null
-     */
-    private function getLocales(): ?array
-    {
-        if (
-            $this->config->has('locales')
-        ) {
-            return $this->config->getArray('locales');
-        }
-
-        return null;
     }
 
     public function addHash(string $assetFolder): void
