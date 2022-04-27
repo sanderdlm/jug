@@ -60,3 +60,30 @@ jobs:
 
     - name: "Run phpcs"
       run: "vendor/bin/phpcs"
+
+  phpunit:
+    runs-on: "ubuntu-20.04"
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          extensions: inotify
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v1"
+        with:
+          dependency-versions: "highest"
+
+      - name: "Run phpunit"
+        run: "vendor/bin/phpunit"
