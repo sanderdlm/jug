@@ -15,9 +15,13 @@ The templates are rendered using Twig, which gives you access to:
 
 ### Multi-lang ready
 
-Jug includes the symfony/translations package, which means the |trans filter is available.
+Jug includes the [symfony/translations](https://symfony.com/doc/current/translation.html#using-twig-filters) package, which means you can translate your templates using the `trans` filter in your Twig templates.
 
-If multiple locales are configured, you'll get a version of your site in each locale.
+```
+{{ 'goodmorning'|trans }}
+```
+
+If multiple locales are configured, Jug will generate a version of your site in each lanfuage.
 
 ### Cache friendly
 
@@ -59,16 +63,16 @@ Or use the Twig apply block to transform entire blocks:
 {% endapply %}
 ```
 
-### Watch command for easy development
+### Serve command for easy development
 
-Running `./vendor/bin/jug watch` will watch the files in the source folder and build your site every time you make a change.
+Running `./vendor/bin/jug serve` will launch the built-in PHP development server and watch all the files in the source folder. Your site will be regenerated every time you make a change.
 
 ## What it is not
 
 Jug does not offer pagination or tag clouds. It does not use front-matter. It does not generate a full blog from a folder of markdown files.
 
-It is simply a 1-to-1 Twig to HTML static site generator. If you want to end up with `/foo/bar/page.html`, you have to write `/foo/bar/page.twig`. You want 20 blog posts? Each post is a Twig file.
+It is a 1-to-1 Twig to HTML static site generator. If you want to end up with `/foo/bar/page.html`, you have to write `/foo/bar/page.twig`. You want 20 blog posts? Each post is a Twig file.
 
 Think of it like building a HTML website by hand, with the added benefits of everything listed in the features above.
 
-You can check out the [example repository](https://github.com/dreadnip/jug-template) to see it in use.
+You can check out the tests/Fixture folder for a dummy example of a Jug website, or take a look at the [example repository](https://github.com/dreadnip/jug-template) to see it in use.
