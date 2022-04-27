@@ -53,14 +53,14 @@ abstract class BaseFunctionalTest extends TestCase
 
         if ($config->has('locales')) {
             foreach ($config->getArray('locales') as $locale) {
-                $translationPath = 'translations/messages.' . $locale . '.yaml';
+                $translationPath = __DIR__ . '/Fixture/translations/messages.' . $locale . '.yaml';
 
                 if (is_file($translationPath)) {
                     $translator->addResource('yaml', $translationPath, $locale);
                 }
             }
         } else {
-            $translationPath = 'translations/messages.' . $config->get('default_locale') . '.yaml';
+            $translationPath = __DIR__ . '/Fixture/translations/messages.' . $config->get('default_locale') . '.yaml';
 
             if (is_file($translationPath)) {
                 $translator->addResource('yaml', $translationPath, $config->getString('default_locale'));
