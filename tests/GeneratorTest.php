@@ -58,4 +58,15 @@ class GeneratorTest extends BaseFunctionalTest
     {
         $this->assertFileExists($this->fixturePath . '/images.json');
     }
+
+    public function testTitleSetting(): void
+    {
+        $this->assertFileExists($this->outputPath . '/en/title.html');
+
+        $titleFile = file_get_contents($this->outputPath . '/en/title.html');
+
+        if ($titleFile) {
+            $this->assertTrue(str_contains($titleFile, '<title>Foo</title>'));
+        }
+    }
 }
