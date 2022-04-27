@@ -39,7 +39,7 @@ abstract class BaseFunctionalTest extends TestCase
             'auto_reload' => true
         ]);
 
-        foreach ($config->getAll() as $key => $value) {
+        foreach ($config->all() as $key => $value) {
             $twig->addGlobal($key, $value);
         }
 

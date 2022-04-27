@@ -54,7 +54,7 @@ $twig = new Environment($loader, [
     'auto_reload' => true
 ]);
 
-foreach ($config->getAll() as $key => $value) {
+foreach ($config->all() as $key => $value) {
     $twig->addGlobal($key, $value);
 }
 

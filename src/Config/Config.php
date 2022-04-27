@@ -34,27 +34,27 @@ class Config
     {
         $value = $this->get($key);
 
-        assert(is_string($value));
-
-        return $value;
+        return strval($value);
     }
 
     /**
-     * @return array<string>
+     * @return array<mixed>
      */
     public function getArray(string $key): array
     {
         $value = $this->get($key);
 
-        assert(is_array($value));
+        if (is_array($value)) {
+            return $value;
+        };
 
-        return $value;
+        return [$value];
     }
 
     /**
      * @return array<string, mixed>
      */
-    public function getAll(): array
+    public function all(): array
     {
         return $this->values;
     }
