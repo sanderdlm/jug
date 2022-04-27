@@ -50,7 +50,7 @@ class Generator
                 $this->renderTemplate($file, $outputFolder);
             }
         }
-        
+
         $this->filesystem->mirror($sourceFolder . '/assets', $outputFolder . '/assets');
 
         $this->compressImages($outputFolder . '/assets/images');
@@ -63,8 +63,6 @@ class Generator
     private function renderTemplate(SplFileInfo $file, string $outputFolder, ?string $locale = null): void
     {
         $renderedTemplate = $this->twig->render($file->getRelativePathname());
-
-        $renderedTemplate = str_replace('assets/', '../assets/', $renderedTemplate);
 
         $outputFormat = str_replace('twig', 'html', $file->getRelativePathname());
 
