@@ -148,7 +148,11 @@ class Generator
         foreach ($nodes as $node) {
             $link = $node->getAttribute('href');
             if (str_contains($link, '.html')) {
-                $node->setAttribute('href', '/' . $locale . '/' . $link);
+                if (!str_starts_with($link, '/')) {
+                    $link = '/' . $link;
+                }
+
+                $node->setAttribute('href', '/' . $locale . $link);
             }
         }
 
