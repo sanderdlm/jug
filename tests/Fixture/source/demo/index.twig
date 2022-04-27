@@ -1,0 +1,12 @@
+{% extends 'base.twig' %}
+
+{% block main %}
+    <h1>Demo</h1>
+    <ul>
+        {% for name, path in dir('tests/Fixture/source/demo') %}
+            {% if name != 'index' %}
+            <li><a href="{{ path }}">{{ name }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

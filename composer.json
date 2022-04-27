@@ -1,6 +1,6 @@
 {
     "name": "dreadnip/jug",
-    "description": "Turn Twig templates into a static multi-lang site.",
+    "description": "Turn Twig templates into a static site.",
     "require": {
         "php": "^8.1",
         "ext-dom": "*",
@@ -14,17 +14,24 @@
         "symfony/twig-bridge": "^6.0",
         "symfony/yaml": "^6.0",
         "symfony/config": "^6.0",
+        "symfony/process": "^6.0",
         "michelf/php-markdown": "^1.9",
         "dreadnip/php-inotify": "^3.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.0",
         "phpstan/phpstan": "1.4.x-dev",
-        "squizlabs/php_codesniffer": "^3.6"
+        "squizlabs/php_codesniffer": "^3.6",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
             "Jug\\": "src/"
+        }
+    },
+    "autoload-dev":{
+        "psr-4" : {
+            "Jug\\Test\\": "tests/"
         }
     },
     "bin": ["jug"]

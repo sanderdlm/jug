@@ -1,0 +1,7 @@
+{% if locales|length > 1 %}
+<div class="language-dropdown">
+  {% for locale in locales %}
+  <a href="/{{ locale }}/">{{ locale|trans }}</a>{% if not loop.last %}/{% endif %}
+  {% endfor %}
+</div>
+{% endif %}

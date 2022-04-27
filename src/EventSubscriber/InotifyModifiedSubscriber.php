@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Jug\EventSubscriber;
 
 use Inotify\InotifyEvent;
-use Jug\Command\BuildCommand;
-use Symfony\Component\Console\Input\ArrayInput;
+use Jug\Generator;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class InotifyModifiedSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private ?BuildCommand $command,
+        private Generator $generator,
         private OutputInterface $output
     ) {
     }
@@ -25,6 +24,8 @@ final class InotifyModifiedSubscriber implements EventSubscriberInterface
 
     public function onInotifyEvent(InotifyEvent $event): void
     {
-        $this->command?->run(new ArrayInput([]), $this->output);
+        $this->generator->generate();
+
+        $this->output->writeln('<info>Site rebuilt</info>');
     }
 }

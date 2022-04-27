@@ -1,0 +1,34 @@
+{% extends 'base.twig' %}
+
+{% block main %}
+  <h1>Example: blog</h1>
+  <p>Jug isn't a full-on blogging platform, but it does have a couple of tools that can help you set up a blog.</p>
+  <p>Utilizing the markdown filter and Twig templates, it becomes incredibly easy to write simple articles or blog posts.</p>
+  <p>For this example. I've made a <code>blog/</code> folder. Inside, I'll place an example blog post: <code>my-first-blog-post.twig</code>:</p>
+  <code class="block">
+    {{ '{% extends "post.twig" %}' }}
+
+    {{ '{% block main %}' }}
+    {{ '{% apply markdown %}' }}
+    # Your first blog post
+
+    Here is where your content would go.
+
+    Written in [Markdown](https://en.wikipedia.org/wiki/Markdown).
+    {{ '{% endapply %}' }}
+    {{ '{% endblock %}' }}
+  </code>
+  <p>To render all of my posts, I'll create <code>index.twig</code>, which will be the landing page of the blog.</p>
+  <p>Jug has a simple helper called <code>dir()</code> that returns a list of filenames in a given folder. You can use this to render a list of links to your blog posts.</p>
+  <code class="block">
+    {% verbatim %}
+  {% for file in dir("source/blog") %}
+    {% if file != "index.html" %}
+        &lt;li&gt;&lt;a&gt; href="blog/{{ file }}">{{ file }}&lt;/a&gt;&lt;/li&gt;
+    {% endif %}
+  {% endfor %}
+  {% endverbatim %}
+  </code>
+  <p>This will render a very simple list of files/posts.</p>
+  <p>There is no support for advanced features like pagination, tags or excerpts. The overhead of supporting those would be a burden on the rest of the tool.</p>
+{% endblock %}

@@ -5,12 +5,13 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../autoload.php';
 
-use Jug\Command\WatchCommand;
+use Jug\Command\ServeCommand;
 use Jug\Twig\AssetExtension;
 use Jug\Twig\FolderExtension;
 use Jug\Twig\HighlightExtension;
 use Jug\Command\BuildCommand;
 use Jug\Config\Config;
+use Jug\Generator;
 use Jug\Twig\MarkdownExtension;
 use Jug\Twig\SqliteExtension;
 use Michelf\Markdown;
@@ -25,22 +26,30 @@ use Jug\Twig\DynamicFilesystemLoader;
 $application = new Application();
 $filesystem = new Filesystem();
 
-if (!$filesystem->exists('source') ||
-    !$filesystem->exists('source/_includes') ||
-    !$filesystem->exists('source/_layouts')) {
-    throw new RuntimeException('Invalid project structure.');
-}
-
 // Config
-if (!is_file('config/jug.php')) {
-    throw new RuntimeException('Missing required config file: config/jug.php');
+if (!is_file('config.php')) {
+    throw new RuntimeException('Missing required config file in project root: config.php');
 }
 
-$config = require 'config/jug.php';
+$config = require 'config.php';
 $config = new Config($config);
 
+// Project structure checks
+if (!$config->has('source') ||
+    !$config->has('output')) {
+    throw new RuntimeException('Missing required config values: source & output');
+}
+
+$sourceFolder = $config->getString('source');
+$templateFolder = $sourceFolder . '/_templates';
+
+if (!$filesystem->exists($sourceFolder) ||
+    !$filesystem->exists($templateFolder)) {
+    throw new RuntimeException('Missing required folder in source folder: _templates');
+}
+
 // Twig
-$loader = new DynamicFilesystemLoader(['source', 'source/_includes', 'source/_layouts']);
+$loader = new DynamicFilesystemLoader([$sourceFolder, $templateFolder]);
 $twig = new Environment($loader, [
     'auto_reload' => true
 ]);
@@ -80,8 +89,11 @@ $twig->addExtension(new HighlightExtension());
 $twig->addExtension(new SqliteExtension());
 $twig->addExtension(new FolderExtension());
 
+// Create the site generator object
+$generator = new Generator($twig, $filesystem, $config);
+
 // Register our commands
-$application->add(new BuildCommand($twig, $filesystem, $config));
-$application->add(new WatchCommand());
+$application->add(new BuildCommand($generator));
+$application->add(new ServeCommand($generator));
 
 $application->run();

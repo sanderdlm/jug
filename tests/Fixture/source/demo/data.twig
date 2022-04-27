@@ -1,0 +1,18 @@
+{% extends 'base.twig' %}
+
+{% block main %}
+  <h1>Data</h1>
+  <p>You can also read data from a variety of sources, below is a list that we read from a SQLite database.</p>
+  <p>The code:</p>
+  {{ highlight("
+{% for problem in data('main.db', 'SELECT * FROM problem') %}
+    <li>{{ problem.name }}</li>
+{% endfor %}
+") }}
+  <p>The list:</p>
+  <ol>
+    {% for problem in data('tests/Fixture/main.db', 'SELECT * FROM problem') %}
+      <li>{{ problem.name }}</li>
+    {% endfor %}
+  </ol>
+{% endblock %}
