@@ -93,7 +93,8 @@ $twig->addExtension(new FolderExtension());
 $dispatcher = new EventDispatcher();
 
 if (is_file('events.php')) {
-    require 'events.php';
+    $eventFactory = require 'events.php';
+    $eventFactory($dispatcher);
 }
 
 // Create the site generator object

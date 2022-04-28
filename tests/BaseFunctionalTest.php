@@ -77,7 +77,8 @@ abstract class BaseFunctionalTest extends TestCase
 
         $dispatcher = new EventDispatcher();
 
-        require 'Fixture/events.php';
+        $eventFactory = require 'Fixture/events.php';
+        $eventFactory($dispatcher);
 
         // Create the site generator object
         $this->generator = new Generator($twig, $filesystem, $config, $dispatcher);

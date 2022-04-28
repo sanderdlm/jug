@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 use Jug\Event\AfterBuild;
 use Jug\Event\BeforeBuild;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Contracts\EventDispatcher\Event;
 
-/** @var $dispatcher EventDispatcher */
+return static function (EventDispatcher $dispatcher): void {
+    $dispatcher->addListener(BeforeBuild::NAME, function (Event $event) {
+        /** @var BeforeBuild $beforeBuild */
+        $beforeBuild = $event;
+    });
 
-/** @var BeforeBuild $event */
-$dispatcher->addListener(BeforeBuild::NAME, function (Event $event) {
-});
-
-/** @var AfterBuild $event */
-$dispatcher->addListener(AfterBuild::NAME, function (Event $event) {
-});
+    $dispatcher->addListener(AfterBuild::NAME, function (Event $event) {
+        /** @var AfterBuild $afterBuild */
+        $afterBuild = $event;
+    });
+};
