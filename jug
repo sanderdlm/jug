@@ -17,6 +17,7 @@ use Jug\Twig\SqliteExtension;
 use Michelf\Markdown;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Console\Application;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -89,8 +90,14 @@ $twig->addExtension(new HighlightExtension());
 $twig->addExtension(new SqliteExtension());
 $twig->addExtension(new FolderExtension());
 
+$dispatcher = new EventDispatcher();
+
+if (is_file('events.php')) {
+    require 'events.php';
+}
+
 // Create the site generator object
-$generator = new Generator($twig, $filesystem, $config);
+$generator = new Generator($twig, $filesystem, $config, $dispatcher);
 
 // Register our commands
 $application->add(new BuildCommand($generator));

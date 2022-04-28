@@ -14,6 +14,7 @@ use Michelf\Markdown;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -74,7 +75,11 @@ abstract class BaseFunctionalTest extends TestCase
         $twig->addExtension(new SqliteExtension());
         $twig->addExtension(new FolderExtension());
 
+        $dispatcher = new EventDispatcher();
+
+        require 'Fixture/events.php';
+
         // Create the site generator object
-        $this->generator = new Generator($twig, $filesystem, $config);
+        $this->generator = new Generator($twig, $filesystem, $config, $dispatcher);
     }
 }

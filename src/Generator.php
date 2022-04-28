@@ -7,8 +7,11 @@ namespace Jug;
 use DOMDocument;
 use DOMElement;
 use Jug\Config\Config;
+use Jug\Event\AfterBuild;
+use Jug\Event\BeforeBuild;
 use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -20,12 +23,15 @@ class Generator
     public function __construct(
         private readonly Environment $twig,
         private readonly Filesystem $filesystem,
-        private readonly Config $config
+        private readonly Config $config,
+        private readonly EventDispatcher $dispatcher
     ) {
     }
 
     public function generate(): void
     {
+        $this->dispatcher->dispatch(new BeforeBuild($this), BeforeBuild::NAME);
+
         $sourceFolder = $this->config->getString('source');
         $outputFolder = $this->config->getString('output');
 
@@ -58,6 +64,8 @@ class Generator
         if ($this->config->has('hash')) {
             $this->addHash($outputFolder . '/assets');
         }
+
+        $this->dispatcher->dispatch(new AfterBuild($this), AfterBuild::NAME);
     }
 
     private function renderTemplate(SplFileInfo $file, string $outputFolder, ?string $locale = null): void
