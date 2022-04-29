@@ -67,7 +67,11 @@ class ServeCommand extends Command
     {
         $finder = new Finder();
         $sourceFolder = $this->generator->getConfig()->getString('source');
-        $paths = [$sourceFolder];
+        $paths = [$sourceFolder, 'config.php'];
+
+        if (is_file('events.php')) {
+            $paths[] = 'events.php';
+        }
 
         foreach ($finder->in($sourceFolder)->directories() as $directory) {
             $paths[] = $directory->getPathname();
