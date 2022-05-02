@@ -6,6 +6,7 @@ declare(strict_types=1);
 require __DIR__ . '/../../autoload.php';
 
 use Jug\Command\ServeCommand;
+use Jug\Site;
 use Jug\Twig\AssetExtension;
 use Jug\Twig\FolderExtension;
 use Jug\Twig\HighlightExtension;
@@ -97,8 +98,11 @@ if (is_file('events.php')) {
     $eventFactory($dispatcher);
 }
 
+// Create the site data object
+$siteData = new Site($config);
+
 // Create the site generator object
-$generator = new Generator($twig, $filesystem, $config, $dispatcher);
+$generator = new Generator($siteData, $twig, $filesystem, $dispatcher);
 
 // Register our commands
 $application->add(new BuildCommand($generator));

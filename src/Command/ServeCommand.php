@@ -54,7 +54,11 @@ class ServeCommand extends Command
         /** @var string */
         $address = $input->getArgument('address');
 
-        $webServer = new Process([PHP_BINARY, '-S', $address, '-t', $this->generator->getConfig()->get('output')]);
+        $webServer = new Process([
+            PHP_BINARY,
+            '-S', $address,
+            '-t', $this->generator->getSite()->getConfig()->get('output')
+        ]);
         $webServer->setTimeout(null);
         $webServer->start();
 
@@ -65,16 +69,11 @@ class ServeCommand extends Command
 
     private function watchFiles(OutputInterface $output): void
     {
-        $finder = new Finder();
-        $sourceFolder = $this->generator->getConfig()->getString('source');
-        $paths = [$sourceFolder, 'config.php'];
+        $sourceFolders = $this->generator->getSite()->getSourceFolders();
+        $paths = ['config.php', ...$sourceFolders];
 
         if (is_file('events.php')) {
             $paths[] = 'events.php';
-        }
-
-        foreach ($finder->in($sourceFolder)->directories() as $directory) {
-            $paths[] = $directory->getPathname();
         }
 
         (new InotifyConsumerFactory())

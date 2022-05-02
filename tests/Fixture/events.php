@@ -16,5 +16,9 @@ return static function (EventDispatcher $dispatcher): void {
     $dispatcher->addListener(AfterBuild::NAME, function (Event $event) {
         /** @var AfterBuild $afterBuild */
         $afterBuild = $event;
+
+        foreach ($afterBuild->getSite()->getOutputFiles() as $info) {
+            //dump($info->getRelativePathname());
+        }
     });
 };

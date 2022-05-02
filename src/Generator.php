@@ -6,7 +6,6 @@ namespace Jug;
 
 use DOMDocument;
 use DOMElement;
-use Jug\Config\Config;
 use Jug\Event\AfterBuild;
 use Jug\Event\BeforeBuild;
 use RuntimeException;
@@ -21,38 +20,34 @@ use Twig\Environment;
 class Generator
 {
     public function __construct(
+        private readonly Site $site,
         private readonly Environment $twig,
         private readonly Filesystem $filesystem,
-        private readonly Config $config,
-        private readonly EventDispatcher $dispatcher
+        private readonly EventDispatcher $dispatcher,
     ) {
     }
 
     public function generate(): void
     {
-        $this->dispatcher->dispatch(new BeforeBuild($this), BeforeBuild::NAME);
+        $this->dispatcher->dispatch(new BeforeBuild($this->site), BeforeBuild::NAME);
 
-        $sourceFolder = $this->config->getString('source');
-        $outputFolder = $this->config->getString('output');
-
-        $finder = new Finder();
+        $sourceFolder = $this->site->getConfig()->getString('source');
+        $outputFolder = $this->site->getConfig()->getString('output');
 
         $this->filesystem->remove($outputFolder);
         $this->filesystem->mkdir($outputFolder);
 
-        $finder->in($sourceFolder)->exclude('_templates')->files()->name('*.twig');
-
-        if ($this->config->has('locales')) {
-            foreach ($this->config->getArray('locales') as $locale) {
+        if ($this->site->getConfig()->has('locales')) {
+            foreach ($this->site->getConfig()->getArray('locales') as $locale) {
                 assert(is_string($locale));
                 $this->setLocale($locale);
 
-                foreach ($finder as $file) {
+                foreach ($this->site->getSourceFiles() as $file) {
                     $this->renderTemplate($file, $outputFolder, $locale);
                 }
             }
         } else {
-            foreach ($finder as $file) {
+            foreach ($this->site->getSourceFiles() as $file) {
                 $this->renderTemplate($file, $outputFolder);
             }
         }
@@ -61,11 +56,13 @@ class Generator
 
         $this->compressImages($outputFolder . '/assets/images');
 
-        if ($this->config->has('hash')) {
+        if ($this->site->getConfig()->has('hash')) {
             $this->addHash($outputFolder . '/assets');
         }
 
-        $this->dispatcher->dispatch(new AfterBuild($this), AfterBuild::NAME);
+        $this->site->collectOutputFiles();
+
+        $this->dispatcher->dispatch(new AfterBuild($this->site), AfterBuild::NAME);
     }
 
     private function renderTemplate(SplFileInfo $file, string $outputFolder, ?string $locale = null): void
@@ -103,17 +100,17 @@ class Generator
 
     private function compressImages(string $imageFolder): void
     {
-        if (!$this->config->has('image_cache')) {
+        if (!$this->site->getConfig()->has('image_cache')) {
             throw new RuntimeException('Missing required config option: image_cache.');
         }
 
-        $imageCacheFile = $this->config->getString('image_cache');
+        $imageCacheFile = $this->site->getConfig()->getString('image_cache');
 
         if (!is_file($imageCacheFile)) {
             $this->filesystem->touch($imageCacheFile);
         }
 
-        $cacheContent = file_get_contents($this->config->getString('image_cache'));
+        $cacheContent = file_get_contents($this->site->getConfig()->getString('image_cache'));
 
         if (!$cacheContent) {
             $cacheContent = '';
@@ -140,7 +137,7 @@ class Generator
             }
         }
 
-        file_put_contents($this->config->getString('image_cache'), json_encode($cache));
+        file_put_contents($this->site->getConfig()->getString('image_cache'), json_encode($cache));
     }
 
     private function makeInternalLinksLocaleAware(string $html, string $locale): string
@@ -173,7 +170,7 @@ class Generator
         return $html;
     }
 
-    public function addHash(string $assetFolder): void
+    private function addHash(string $assetFolder): void
     {
         $finder = new Finder();
 
@@ -182,7 +179,7 @@ class Generator
         foreach ($finder as $file) {
             $extension = $file->getExtension();
             $baseName = $file->getFilenameWithoutExtension();
-            $hashedName = $baseName . '.' . $this->config->get('hash') . '.' . $extension;
+            $hashedName = $baseName . '.' . $this->site->getConfig()->get('hash') . '.' . $extension;
 
             $this->filesystem->rename(
                 $file->getRealPath(),
@@ -191,8 +188,8 @@ class Generator
         }
     }
 
-    public function getConfig(): Config
+    public function getSite(): Site
     {
-        return $this->config;
+        return $this->site;
     }
 }

@@ -4,6 +4,7 @@ namespace Jug\Test;
 
 use Jug\Config\Config;
 use Jug\Generator;
+use Jug\Site;
 use Jug\Twig\AssetExtension;
 use Jug\Twig\DynamicFilesystemLoader;
 use Jug\Twig\FolderExtension;
@@ -22,6 +23,7 @@ use Twig\Environment;
 
 abstract class BaseFunctionalTest extends TestCase
 {
+    protected Site $site;
     protected Generator $generator;
 
     protected function setUp(): void
@@ -80,7 +82,10 @@ abstract class BaseFunctionalTest extends TestCase
         $eventFactory = require 'Fixture/events.php';
         $eventFactory($dispatcher);
 
+        // Create the site data object
+        $this->site = new Site($config);
+
         // Create the site generator object
-        $this->generator = new Generator($twig, $filesystem, $config, $dispatcher);
+        $this->generator = new Generator($this->site, $twig, $filesystem, $dispatcher);
     }
 }

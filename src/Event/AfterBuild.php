@@ -2,21 +2,21 @@
 
 namespace Jug\Event;
 
-use Jug\Generator;
+use Jug\Site;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class AfterBuild extends Event
 {
     public const NAME =  'after.build';
 
-    protected Generator $site;
+    protected Site $site;
 
-    public function __construct(Generator $site)
+    public function __construct(Site $site)
     {
         $this->site = $site;
     }
 
-    public function getSite(): Generator
+    public function getSite(): Site
     {
         return $this->site;
     }
