@@ -13,7 +13,6 @@ use Jug\Twig\MarkdownExtension;
 use Jug\Twig\SqliteExtension;
 use Michelf\Markdown;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
@@ -44,11 +43,6 @@ abstract class BaseFunctionalTest extends TestCase
 
         foreach ($config->all() as $key => $value) {
             $twig->addGlobal($key, $value);
-        }
-
-        // Translations
-        if (!$config->has('default_locale')) {
-            throw new RuntimeException('Missing required config option: default_locale.');
         }
 
         $translator = new Translator($config->getString('default_locale'));

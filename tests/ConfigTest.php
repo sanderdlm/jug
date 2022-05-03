@@ -4,8 +4,8 @@ namespace Jug\Test;
 
 use DateTime;
 use Jug\Config\Config;
+use Jug\Exception\ConfigException;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 class ConfigTest extends TestCase
 {
@@ -34,7 +34,7 @@ class ConfigTest extends TestCase
 
     public function testGetThatDoesNotExist(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(ConfigException::class);
 
         $this->fixture->get('foo');
     }

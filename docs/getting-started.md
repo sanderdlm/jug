@@ -7,42 +7,31 @@ Each Jug project follows this structure:
 |-- output/                        # Your generated site
 |-- source/                        # Your site's source files
 |  |-- _templates/                 # Templates, includes & macros. These files are not built as pages
+|  `-- assets/                     # Images, stylesheets, scripts, ...
 |-- translations/                  # Optional: if you're building a multi-language site
 |-- config.php                     # Configuration
 |-- events.php                     # Optional: Pre and post build event handling
 `-- composer.json                  # Dependencies
 ```
-Jug expects two mandatory configuration options in your `config.php`: `source` and `output`. These are the two names of your source and output folders.
-
-When you run the build or serve command, Jug will scan and build each Twig template inside the source folder and place the generated HTML in the output folder.
+When you run the build or serve command, Jug will scan and build each Twig template inside the source folder and dump the generated HTML in the output folder.
 
 You can then [deploy](deploying.md) the content of the output folder to any host you like.
 
 ## Installation
 
-There are two ways to start a new Jug project:
-1. Require Jug through Composer and create all the required folders and files yourself.
+To start a new Jug site, create your folder, require the package through Composer and run the `init` command.
 ```
-mkdir my-new-project
-cd my-new-project
+mkdir my-new-site
+cd my-new-site
 composer require dreadnip/jug
-mkdir output
-mkdir source/_templates
-touch config.php
-vi config.php (enter correct configuration, see below)
-./vendor/bin/jug serve
-```
-2. Use the skeleton project to get started more quickly
-```
-composer create-project dreadnip/jug-skeleton my-new-project
-cd my-new-project
-./vendor/bin/jug serve
+./vendor/bin/jug init
 ```
 
 ## Commands
 
 * `./vendor/bin/jug build` builds the site, once.
 * `./vendor/bin/jug serve` launches the PHP built-in webserver and watches all files in the source folder for changes. The site will be rebuilt on every change.
+* `./vendor/bin/jug init` generate a blank project skeleton.
 
 ## Configuration
 

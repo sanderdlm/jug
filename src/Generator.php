@@ -8,7 +8,7 @@ use DOMDocument;
 use DOMElement;
 use Jug\Event\AfterBuild;
 use Jug\Event\BeforeBuild;
-use RuntimeException;
+use Jug\Exception\ConfigException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
@@ -101,7 +101,7 @@ final class Generator
     private function compressImages(string $imageFolder): void
     {
         if (!$this->site->getConfig()->has('image_cache')) {
-            throw new RuntimeException('Missing required config option: image_cache.');
+            throw ConfigException::missingKey('image_cache');
         }
 
         $imageCacheFile = $this->site->getConfig()->getString('image_cache');

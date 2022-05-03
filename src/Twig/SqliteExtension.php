@@ -2,6 +2,7 @@
 
 namespace Jug\Twig;
 
+use Jug\Exception\FileSystemException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -20,7 +21,7 @@ class SqliteExtension extends AbstractExtension
     public function loadData(string $databaseFile, string $query): ?array
     {
         if (!file_exists($databaseFile)) {
-            throw new \RuntimeException($databaseFile . ' does not exist.');
+            throw FileSystemException::missingFile($databaseFile);
         }
 
         $database = new \PDO("sqlite:$databaseFile");

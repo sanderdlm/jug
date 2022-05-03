@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jug;
 
 use Jug\Config\Config;
+use Jug\Exception\ConfigException;
+use Jug\Exception\FileSystemException;
 use Jug\Twig\AssetExtension;
 use Jug\Twig\DynamicFilesystemLoader;
 use Jug\Twig\FolderExtension;
@@ -10,7 +14,6 @@ use Jug\Twig\HighlightExtension;
 use Jug\Twig\MarkdownExtension;
 use Jug\Twig\SqliteExtension;
 use Michelf\Markdown;
-use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
@@ -29,7 +32,7 @@ class Kernel
     {
         // Config
         if (!is_file('config.php')) {
-            throw new RuntimeException('Missing required config file in project root: config.php');
+            throw FileSystemException::missingFile('config.php');
         }
 
         $config = require 'config.php';
@@ -40,7 +43,7 @@ class Kernel
             !$config->has('source') ||
             !$config->has('output')
         ) {
-            throw new RuntimeException('Missing required config values: source & output');
+            ConfigException::missingKey('source & output');
         }
 
         $sourceFolder = $config->getString('source');
@@ -50,7 +53,7 @@ class Kernel
             !$this->filesystem->exists($sourceFolder) ||
             !$this->filesystem->exists($templateFolder)
         ) {
-            throw new RuntimeException('Missing required folder in source folder: _templates');
+            throw FileSystemException::missingDirectory('_templates');
         }
 
         // Twig
@@ -65,7 +68,7 @@ class Kernel
 
         // Translations
         if (!$config->has('default_locale')) {
-            throw new RuntimeException('Missing required config option: default_locale.');
+            throw ConfigException::missingKey('default_locale.');
         }
 
         $translator = new Translator($config->getString('default_locale'));

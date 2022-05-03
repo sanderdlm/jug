@@ -3,6 +3,7 @@
 namespace Jug\Twig;
 
 use Jug\Config\Config;
+use Jug\Exception\ConfigException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -23,7 +24,7 @@ class AssetExtension extends AbstractExtension
     public function addHash(string $path): string
     {
         if (!$this->config->has('hash')) {
-            throw new \RuntimeException('Provide a valid hash in your config before using the asset function.');
+            throw ConfigException::missingKey('hash');
         }
 
         $extension = pathinfo($path, PATHINFO_EXTENSION);

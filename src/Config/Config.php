@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jug\Config;
 
-use RuntimeException;
+use Jug\Exception\ConfigException;
 
 class Config
 {
@@ -24,7 +24,7 @@ class Config
     public function get(string $key): mixed
     {
         if (!array_key_exists($key, $this->values)) {
-            throw new RuntimeException('Attempted to read config value for key: ' . $key . ', but it doesn\'t exist');
+            throw ConfigException::missingKey($key);
         }
 
         return $this->values[$key];
