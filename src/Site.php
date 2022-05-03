@@ -6,7 +6,7 @@ use Jug\Config\Config;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class Site
+final class Site
 {
     /**
      * @param array<string, SplFileInfo> $sourceFiles

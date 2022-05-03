@@ -7,14 +7,15 @@ namespace Jug\Command;
 use Inotify\InotifyConsumerFactory;
 use Inotify\InotifyEventCodeEnum;
 use Inotify\WatchedResourceCollection;
+use Jug\Config\Config;
 use Jug\EventSubscriber\InotifyModifiedSubscriber;
 use Jug\Generator;
+use Jug\Kernel;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
 #[AsCommand(
@@ -24,7 +25,7 @@ use Symfony\Component\Process\Process;
 class ServeCommand extends Command
 {
     public function __construct(
-        private Generator $generator,
+        private readonly Kernel $kernel,
     ) {
         parent::__construct();
     }
@@ -42,14 +43,16 @@ class ServeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $server = $this->startWebServer($input, $output);
+        $generator = $this->kernel->buildGenerator();
 
-        $this->watchFiles($output);
+        $server = $this->startWebServer($generator->getSite()->getConfig(), $input, $output);
+
+        $this->watchFiles($generator, $output);
 
         return Command::SUCCESS;
     }
 
-    private function startWebServer(InputInterface $input, OutputInterface $output): Process
+    private function startWebServer(Config $config, InputInterface $input, OutputInterface $output): Process
     {
         /** @var string */
         $address = $input->getArgument('address');
@@ -57,7 +60,7 @@ class ServeCommand extends Command
         $webServer = new Process([
             PHP_BINARY,
             '-S', $address,
-            '-t', $this->generator->getSite()->getConfig()->get('output')
+            '-t', $config->get('output')
         ]);
         $webServer->setTimeout(null);
         $webServer->start();
@@ -67,9 +70,9 @@ class ServeCommand extends Command
         return $webServer;
     }
 
-    private function watchFiles(OutputInterface $output): void
+    private function watchFiles(Generator $generator, OutputInterface $output): void
     {
-        $sourceFolders = $this->generator->getSite()->getSourceFolders();
+        $sourceFolders = $generator->getSite()->getSourceFolders();
         $paths = ['config.php', ...$sourceFolders];
 
         if (is_file('events.php')) {
@@ -77,7 +80,7 @@ class ServeCommand extends Command
         }
 
         (new InotifyConsumerFactory())
-            ->registerSubscriber(new InotifyModifiedSubscriber($this->generator, $output))
+            ->registerSubscriber(new InotifyModifiedSubscriber($generator, $output))
             ->consume(WatchedResourceCollection::fromArray(
                 $paths,
                 InotifyEventCodeEnum::ON_CLOSE_WRITE,

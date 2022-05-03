@@ -17,7 +17,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 
-class Generator
+final class Generator
 {
     public function __construct(
         private readonly Site $site,
