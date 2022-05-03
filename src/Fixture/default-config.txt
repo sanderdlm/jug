@@ -1,9 +1,0 @@
-<?php
-
-return [
-    'source' => '/source',
-    'output' => '/output',
-    'default_locale' => 'en',
-    'hash' => bin2hex(random_bytes(4)),
-    'image_cache' => '/images.json',
-];

@@ -24,20 +24,24 @@ class InitCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($this->filesystem->exists('config.php')) {
+        if (
+            $this->filesystem->exists('config.php') ||
+            $this->filesystem->exists('source/_templates')
+        ) {
             $output->writeln(' <error>You can only initialize a new site in a blank folder.</error>');
         }
 
-        $output->write('Setting up new Jug site');
+        $output->write('Setting up your new Jug site..');
 
-        $this->filesystem->mkdir('source/_templates');
-        $defaultConfig = file_get_contents('Fixture/default-config.txt');
+        $defaultConfig = file_get_contents('vendor/dreadnip/jug/Fixture/default-config.txt');
 
         if ($defaultConfig) {
             $this->filesystem->appendToFile('config.php', $defaultConfig);
         }
 
-        $output->writeln('<info>Done!</info>');
+        $this->filesystem->mkdir('source/_templates');
+
+        $output->writeln(' <info>Done!</info>');
 
         return Command::SUCCESS;
     }
