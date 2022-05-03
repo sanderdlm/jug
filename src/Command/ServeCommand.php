@@ -45,6 +45,12 @@ class ServeCommand extends Command
     {
         $generator = $this->kernel->buildGenerator();
 
+        $output->write('Building site..');
+
+        $generator->generate();
+
+        $output->writeln(' <info>Done!</info>');
+
         $server = $this->startWebServer($generator->getSite()->getConfig(), $input, $output);
 
         $this->watchFiles($generator, $output);
