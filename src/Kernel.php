@@ -30,15 +30,18 @@ class Kernel
 
     public function buildGenerator(): Generator
     {
-        // Config
         if (!is_file('config.php')) {
             throw FileSystemException::missingFile('config.php');
         }
 
         $config = require 'config.php';
+
+        if (!is_array($config)) {
+            throw ConfigException::malformedContent();
+        }
+
         $config = new Config($config);
 
-        // Project structure checks
         if (
             !$config->has('source') ||
             !$config->has('output')
@@ -56,17 +59,13 @@ class Kernel
             throw FileSystemException::missingDirectory('_templates');
         }
 
-        // Twig
         $loader = new DynamicFilesystemLoader([$sourceFolder, $templateFolder]);
-        $twig = new Environment($loader, [
-            'auto_reload' => true
-        ]);
+        $twig = new Environment($loader);
 
         foreach ($config->all() as $key => $value) {
             $twig->addGlobal($key, $value);
         }
 
-        // Translations
         if (!$config->has('default_locale')) {
             throw ConfigException::missingKey('default_locale.');
         }
