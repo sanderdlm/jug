@@ -2,7 +2,7 @@
 
 namespace Jug\Twig;
 
-use Michelf\Markdown;
+use Michelf\MarkdownExtra;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use Twig\TwigFilter;
@@ -10,7 +10,7 @@ use Twig\TwigFilter;
 class MarkdownExtension extends AbstractExtension
 {
     public function __construct(
-        private Markdown $parser
+        private MarkdownExtra $parser
     ) {
     }
 
