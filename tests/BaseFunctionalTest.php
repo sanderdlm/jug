@@ -11,7 +11,6 @@ use Jug\Twig\FolderExtension;
 use Jug\Twig\HighlightExtension;
 use Jug\Twig\MarkdownExtension;
 use Jug\Twig\SqliteExtension;
-use Michelf\Markdown;
 use Michelf\MarkdownExtra;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
