@@ -26,8 +26,8 @@ final class Site
         return array_filter(
             $this->pages,
             function (Page $page) use ($key, $value) {
-                return \array_key_exists($key, $page->getContext()) &&
-                    $page->getContext()[$key] === $value;
+                return \array_key_exists($key, $page->context) &&
+                    $page->context[$key] === $value;
             }
         );
     }

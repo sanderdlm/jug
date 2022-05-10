@@ -68,7 +68,7 @@ final class Generator
     private function renderTemplate(Page $page, string $outputFolder, ?string $locale = null): void
     {
         $renderedTemplate = $this->twig->render(
-            $page->getSource()->relativePath,
+            $page->source->relativePath,
             [
                 'site' => $this->site,
                 'currentLocale' => $locale
@@ -79,7 +79,7 @@ final class Generator
             $renderedTemplate = $this->makeInternalLinksLocaleAware($renderedTemplate, $locale);
         }
 
-        $outputPath = $this->builder->buildOutputPath($page->getSource()->relativePath, $locale);
+        $outputPath = $this->builder->buildOutputPath($page->source->relativePath, $locale);
 
         $this->filesystem->dumpFile(
             $outputFolder . DIRECTORY_SEPARATOR . $outputPath,

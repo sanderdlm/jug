@@ -9,21 +9,16 @@ class Page
      * @param File|array<File> $output
      */
     public function __construct(
-        private readonly File $source,
-        private File|array $output,
-        private readonly array $context = []
+        public readonly File $source,
+        private readonly File|array $output,
+        public readonly array $context = []
     ) {
-    }
-
-    public function getSource(): File
-    {
-        return $this->source;
     }
 
     /**
      * @return File|array<string, File>
      */
-    public function getFile(?string $locale = null): File|array
+    public function getOutput(?string $locale = null): File|array
     {
         if (
             is_array($this->output) &&
@@ -34,13 +29,5 @@ class Page
         }
 
         return $this->output;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function getContext(): array
-    {
-        return $this->context;
     }
 }
