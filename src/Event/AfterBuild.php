@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jug\Event;
 
-use Jug\Site;
+use Jug\Domain\Site;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class AfterBuild extends Event
