@@ -43,7 +43,7 @@ class GeneratorTest extends BaseFunctionalTest
 
     public function testAssetHashing(): void
     {
-        $assetHashForThisBuild = $this->generator->getSite()->getConfig()->getString('hash');
+        $assetHashForThisBuild = $this->generator->getSite()->config->getString('hash');
 
         $this->assertFileExists($this->outputPath . '/assets/css/style.' . $assetHashForThisBuild . '.css');
         $this->assertFileExists($this->outputPath . '/assets/images/logo.' . $assetHashForThisBuild . '.png');

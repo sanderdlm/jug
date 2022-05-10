@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'source' => __DIR__ . '/source',
-    'output' => __DIR__ . '/output',
+    'source' => 'tests/Fixture/source',
+    'output' => 'tests/Fixture/output',
     'default_locale' => 'en',
     'locales' => [
         'en',
@@ -10,5 +10,5 @@ return [
     ],
     'hash' => bin2hex(random_bytes(4)),
     'year' => (new DateTime('now'))->format('Y'),
-    'image_cache' => __DIR__ . '/images.json',
+    'image_cache' => 'images.json',
 ];

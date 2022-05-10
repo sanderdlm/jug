@@ -3,10 +3,8 @@
 {% block main %}
     <h1>News</h1>
     <ul>
-        {% for name, path in dir('tests/Fixture/source/news') %}
-            {% if name != 'index' %}
-            <li><a href="blog/{{ path }}">{{ name }}</a></li>
-            {% endif %}
+        {% for page in site.select('type', 'article') %}
+            <li><a href="{{ page.getOutput(currentLocale).relativePath }}">{{ template.context.description }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}
