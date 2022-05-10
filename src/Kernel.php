@@ -12,6 +12,7 @@ use Jug\Twig\DynamicFilesystemLoader;
 use Jug\Twig\FolderExtension;
 use Jug\Twig\HighlightExtension;
 use Jug\Twig\MarkdownExtension;
+use Jug\Twig\Parser;
 use Jug\Twig\SqliteExtension;
 use Michelf\MarkdownExtra;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -62,10 +63,6 @@ class Kernel
         $loader = new DynamicFilesystemLoader([$sourceFolder, $templateFolder]);
         $twig = new Environment($loader);
 
-        foreach ($config->all() as $key => $value) {
-            $twig->addGlobal($key, $value);
-        }
-
         if (!$config->has('default_locale')) {
             throw ConfigException::missingKey('default_locale.');
         }
@@ -105,10 +102,13 @@ class Kernel
             $eventFactory($dispatcher);
         }
 
+        $parser = new Parser($twig);
+
         // Create the site data object
-        $siteData = new Site($config);
+        $siteBuilder = new Builder($config, $parser);
+        $siteData = $siteBuilder->build();
 
         // Create the site generator object
-        return new Generator($siteData, $twig, $this->filesystem, $dispatcher);
+        return new Generator($siteBuilder, $siteData, $twig, $this->filesystem, $dispatcher);
     }
 }

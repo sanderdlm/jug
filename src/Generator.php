@@ -6,6 +6,8 @@ namespace Jug;
 
 use DOMDocument;
 use DOMElement;
+use Jug\Domain\Page;
+use Jug\Domain\Site;
 use Jug\Event\AfterBuild;
 use Jug\Event\BeforeBuild;
 use Jug\Exception\ConfigException;
@@ -13,13 +15,13 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 
 final class Generator
 {
     public function __construct(
+        private readonly Builder $builder,
         private readonly Site $site,
         private readonly Environment $twig,
         private readonly Filesystem $filesystem,
@@ -31,24 +33,24 @@ final class Generator
     {
         $this->dispatcher->dispatch(new BeforeBuild($this->site), BeforeBuild::NAME);
 
-        $sourceFolder = $this->site->getConfig()->getString('source');
-        $outputFolder = $this->site->getConfig()->getString('output');
+        $sourceFolder = $this->site->config->getString('source');
+        $outputFolder = $this->site->config->getString('output');
 
         $this->filesystem->remove($outputFolder);
         $this->filesystem->mkdir($outputFolder);
 
-        if ($this->site->getConfig()->has('locales')) {
-            foreach ($this->site->getConfig()->getArray('locales') as $locale) {
+        if ($this->site->config->has('locales')) {
+            foreach ($this->site->config->getArray('locales') as $locale) {
                 assert(is_string($locale));
                 $this->setLocale($locale);
 
-                foreach ($this->site->getSourceFiles() as $file) {
-                    $this->renderTemplate($file, $outputFolder, $locale);
+                foreach ($this->site->pages as $page) {
+                    $this->renderTemplate($page, $outputFolder, $locale);
                 }
             }
         } else {
-            foreach ($this->site->getSourceFiles() as $file) {
-                $this->renderTemplate($file, $outputFolder);
+            foreach ($this->site->pages as $page) {
+                $this->renderTemplate($page, $outputFolder);
             }
         }
 
@@ -56,39 +58,33 @@ final class Generator
 
         $this->compressImages($outputFolder . '/assets/images');
 
-        if ($this->site->getConfig()->has('hash')) {
+        if ($this->site->config->has('hash')) {
             $this->addHash($outputFolder . '/assets');
         }
-
-        $this->site->collectOutputFiles();
 
         $this->dispatcher->dispatch(new AfterBuild($this->site), AfterBuild::NAME);
     }
 
-    private function renderTemplate(SplFileInfo $file, string $outputFolder, ?string $locale = null): void
+    private function renderTemplate(Page $page, string $outputFolder, ?string $locale = null): void
     {
-        $renderedTemplate = $this->twig->render($file->getRelativePathname());
-
-        $outputFormat = str_replace('twig', 'html', $file->getRelativePathname());
+        $renderedTemplate = $this->twig->render(
+            $page->getSource()->relativePath,
+            [
+                'site' => $this->site,
+                'currentLocale' => $locale
+            ]
+        );
 
         if ($locale !== null) {
             $renderedTemplate = $this->makeInternalLinksLocaleAware($renderedTemplate, $locale);
-
-            $outputPath = sprintf(
-                '%s/%s/%s',
-                $outputFolder,
-                $locale,
-                $outputFormat
-            );
-        } else {
-            $outputPath = sprintf(
-                '%s/%s',
-                $outputFolder,
-                $outputFormat
-            );
         }
 
-        $this->filesystem->dumpFile($outputPath, $renderedTemplate);
+        $outputPath = $this->builder->buildOutputPath($page->getSource()->relativePath, $locale);
+
+        $this->filesystem->dumpFile(
+            $outputFolder . DIRECTORY_SEPARATOR . $outputPath,
+            $renderedTemplate
+        );
     }
 
     private function setLocale(string $locale): void
@@ -100,17 +96,17 @@ final class Generator
 
     private function compressImages(string $imageFolder): void
     {
-        if (!$this->site->getConfig()->has('image_cache')) {
+        if (!$this->site->config->has('image_cache')) {
             throw ConfigException::missingKey('image_cache');
         }
 
-        $imageCacheFile = $this->site->getConfig()->getString('image_cache');
+        $imageCacheFile = $this->site->config->getString('image_cache');
 
         if (!is_file($imageCacheFile)) {
             $this->filesystem->touch($imageCacheFile);
         }
 
-        $cacheContent = file_get_contents($this->site->getConfig()->getString('image_cache'));
+        $cacheContent = file_get_contents($this->site->config->getString('image_cache'));
 
         if (!$cacheContent) {
             $cacheContent = '';
@@ -137,7 +133,7 @@ final class Generator
             }
         }
 
-        file_put_contents($this->site->getConfig()->getString('image_cache'), json_encode($cache));
+        file_put_contents($this->site->config->getString('image_cache'), json_encode($cache));
     }
 
     private function makeInternalLinksLocaleAware(string $html, string $locale): string
@@ -179,7 +175,7 @@ final class Generator
         foreach ($finder as $file) {
             $extension = $file->getExtension();
             $baseName = $file->getFilenameWithoutExtension();
-            $hashedName = $baseName . '.' . $this->site->getConfig()->get('hash') . '.' . $extension;
+            $hashedName = $baseName . '.' . $this->site->config->get('hash') . '.' . $extension;
 
             $this->filesystem->rename(
                 $file->getRealPath(),
