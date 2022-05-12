@@ -78,11 +78,13 @@ final class Generator
             ]
         );
 
+        $outputPath = $this->builder->buildOutputPath($page->source->relativePath);
+
         if ($locale !== null) {
             $renderedTemplate = $this->makeInternalLinksLocaleAware($renderedTemplate, $locale);
-        }
 
-        $outputPath = $this->builder->buildOutputPath($page->source->relativePath, $locale);
+            $outputPath = $locale . DIRECTORY_SEPARATOR . $outputPath;
+        }
 
         $this->filesystem->dumpFile(
             $outputFolder . DIRECTORY_SEPARATOR . $outputPath,

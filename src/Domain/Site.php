@@ -38,7 +38,7 @@ final class Site
     public function getSourceFolders(): array
     {
         $finder = new Finder();
-        $paths = [];
+        $paths = [$this->config->getString('source')];
 
         foreach ($finder->in($this->config->getString('source'))->directories() as $directory) {
             $paths[] = $directory->getPathname();

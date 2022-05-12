@@ -38,11 +38,9 @@ final class Builder
             ->name('*.twig');
 
         foreach ($finder as $file) {
-            $output = $this->buildLocaleAwareOutputPath($file->getRelativePathname());
-
             $pages[] = new Page(
                 new File($file->getRelativePathname()),
-                $output,
+                new File($this->buildOutputPath($file->getRelativePathname())),
                 $this->parser->parse($file->getRelativePathname())
             );
         }
@@ -50,35 +48,8 @@ final class Builder
         return $pages;
     }
 
-    /**
-     * @return File|array<File>
-     */
-    private function buildLocaleAwareOutputPath(string $relativePath): File|array
+    public function buildOutputPath(string $relativePath): string
     {
-        if ($this->config->has('locales')) {
-            $output = [];
-            foreach ($this->config->getArray('locales') as $locale) {
-                assert(is_string($locale));
-
-                $outputPath = $this->buildOutputPath($relativePath, $locale);
-                $output[$locale] = new File($outputPath);
-            }
-        } else {
-            $outputPath = $this->buildOutputPath($relativePath);
-            $output = new File($outputPath);
-        }
-
-        return $output;
-    }
-
-    public function buildOutputPath(string $relativePath, ?string $locale = null): string
-    {
-        $outputFileName = str_replace('twig', 'html', $relativePath);
-
-        if ($locale !== null) {
-            $outputFileName = $locale . DIRECTORY_SEPARATOR . $outputFileName;
-        }
-
-        return $outputFileName;
+        return str_replace('twig', 'html', $relativePath);
     }
 }
