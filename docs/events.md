@@ -27,4 +27,4 @@ return static function (EventDispatcher $dispatcher): void {
 };
 ```
 
-The `$event` parameter has access to the `Site` object using `$event->getSite()`. The site object is a container that holds lists of all the source files, all the output files and all configuration values.
+The `$event` parameter has access to the `Site` object using `$event->site`. The site object is a container that holds lists of all the source files, all the output files and all configuration values. See [the site object](the-site-object.md) documentation.

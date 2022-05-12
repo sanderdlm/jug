@@ -1,11 +1,5 @@
-# Features
+# Twig
 
-
-
-Linux:
-```
-sudo apt install jpegoptim optipng
-```
 ## Custom Twig filters and functions
 
 ### Functions
