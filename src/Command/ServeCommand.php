@@ -51,7 +51,7 @@ class ServeCommand extends Command
 
         $output->writeln(' <info>Done!</info>');
 
-        $server = $this->startWebServer($generator->getSite()->getConfig(), $input, $output);
+        $server = $this->startWebServer($generator->getSite()->config, $input, $output);
 
         $this->watchFiles($generator, $output);
 

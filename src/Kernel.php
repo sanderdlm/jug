@@ -106,9 +106,8 @@ class Kernel
 
         // Create the site data object
         $siteBuilder = new Builder($config, $parser);
-        $siteData = $siteBuilder->build();
 
         // Create the site generator object
-        return new Generator($siteBuilder, $siteData, $twig, $this->filesystem, $dispatcher);
+        return new Generator($siteBuilder, $twig, $this->filesystem, $dispatcher);
     }
 }

@@ -83,6 +83,6 @@ abstract class BaseFunctionalTest extends TestCase
         $this->site = $this->builder->build();
 
         // Create the site generator object
-        $this->generator = new Generator($this->builder, $this->site, $twig, $filesystem, $dispatcher);
+        $this->generator = new Generator($this->builder, $twig, $filesystem, $dispatcher);
     }
 }

@@ -20,9 +20,10 @@ use Twig\Environment;
 
 final class Generator
 {
+    private Site $site;
+
     public function __construct(
         private readonly Builder $builder,
-        private readonly Site $site,
         private readonly Environment $twig,
         private readonly Filesystem $filesystem,
         private readonly EventDispatcher $dispatcher,
@@ -31,6 +32,8 @@ final class Generator
 
     public function generate(): void
     {
+        $this->site = $this->builder->build();
+
         $this->dispatcher->dispatch(new BeforeBuild($this->site), BeforeBuild::NAME);
 
         $sourceFolder = $this->site->config->getString('source');

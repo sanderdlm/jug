@@ -12,8 +12,7 @@ return static function (EventDispatcher $dispatcher): void {
         /** @var BeforeBuild $beforeBuild */
         $beforeBuild = $event;
 
-        foreach ($beforeBuild->getSite()->pages as $page) {
-            //dump($info);
+        foreach ($beforeBuild->site->pages as $page) {
         }
     });
 
@@ -21,8 +20,7 @@ return static function (EventDispatcher $dispatcher): void {
         /** @var AfterBuild $afterBuild */
         $afterBuild = $event;
 
-        foreach ($afterBuild->getSite()->pages as $page) {
-            //dump($info);
+        foreach ($afterBuild->site->pages as $page) {
         }
     });
 };
