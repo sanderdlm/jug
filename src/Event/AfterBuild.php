@@ -11,15 +11,8 @@ class AfterBuild extends Event
 {
     public const NAME =  'after.build';
 
-    protected Site $site;
-
-    public function __construct(Site $site)
-    {
-        $this->site = $site;
-    }
-
-    public function getSite(): Site
-    {
-        return $this->site;
+    public function __construct(
+        public readonly Site $site
+    ) {
     }
 }
