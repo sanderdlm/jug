@@ -58,7 +58,9 @@ final class Builder
         if ($this->config->has('locales')) {
             $output = [];
             foreach ($this->config->getArray('locales') as $locale) {
-                $outputPath = $this->buildOutputPath($relativePath);
+                assert(is_string($locale));
+
+                $outputPath = $this->buildOutputPath($relativePath, $locale);
                 $output[$locale] = new File($outputPath);
             }
         } else {
