@@ -21,13 +21,17 @@ final class Site
     /**
      * @return array<int, Page>
      */
-    public function select(string $key, string $value): array
+    public function select(string $key, ?string $value = null): array
     {
         return array_filter(
             $this->pages,
             function (Page $page) use ($key, $value) {
-                return \array_key_exists($key, $page->context) &&
-                    $page->context[$key] === $value;
+                if ($value === null) {
+                    return \array_key_exists($key, $page->context);
+                } else {
+                    return \array_key_exists($key, $page->context) &&
+                        $page->context[$key] === $value;
+                }
             }
         );
     }
