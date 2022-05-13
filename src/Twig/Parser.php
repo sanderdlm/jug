@@ -80,6 +80,7 @@ class Parser
         }
     }
 
+    /** @phpstan-ignore-next-line */
     private function getNodes(Node $parent, string $nodeClass): array
     {
         $matches = [];

@@ -33,14 +33,5 @@ return static function (EventDispatcher $dispatcher): void {
     $dispatcher->addListener(AfterBuild::NAME, function (Event $event) {
         /** @var AfterBuild $afterBuild */
         $afterBuild = $event;
-
-        /*
-         * An example of what you can build with the after event would be a sitemap
-         */
-
-        $sitemap = new SomeSiteMapLibrary();
-        foreach ($afterBuild->site->pages as $page) {
-            $sitemap->addPage($page->output->relativePath);
-        }
     });
 };
