@@ -117,7 +117,7 @@ class InitCommand extends Command
             background-color: #fafafa;
         }
         
-        * + * {
+        body * + * {
             margin-top: 2rem;
         }
         DOC;
