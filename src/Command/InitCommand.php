@@ -40,7 +40,7 @@ class InitCommand extends Command
         $this->filesystem->mkdir('source/assets/css');
         $this->filesystem->mkdir('source/assets/js');
 
-        $this->filesystem->appendToFile('source/assets/css/style.css', '');
+        $this->filesystem->appendToFile('source/assets/css/style.css', $this->getDefaultStylesheet());
         $this->filesystem->appendToFile('source/_templates/base.twig', $this->getDefaultBaseTemplate());
         $this->filesystem->appendToFile('source/index.twig', $this->getDefaultIndexTemplate());
 
@@ -91,9 +91,35 @@ class InitCommand extends Command
         {% extends 'base.twig' %}
         
         {% block content %}
-            <h1>Hello world</h1>
-            <p>Welcome to your new site</p>
+            <h1>Welcome 👋</h1>
+            <p>Thanks for checking out Jug! You can get started building your site right away.</p>
+            <p>If you have any questions, please check out <a href="https://github.com/dreadnip/jug/tree/master/docs">the documentation</a>.</p>
         {% endblock %}
+        DOC;
+    }
+
+    private function getDefaultStylesheet(): string
+    {
+        return <<<DOC
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+            font-size: 1.3rem;
+            color: #333;
+            overflow-y: scroll;
+            line-height: 1.5;
+            padding: 3rem;
+            background-color: #fafafa;
+        }
+        
+        * + * {
+            margin-top: 2rem;
+        }
         DOC;
     }
 }
