@@ -2,6 +2,8 @@
 
 namespace Jug\Test;
 
+use Jug\Crawler\HtmlCrawler;
+
 class GeneratorTest extends BaseFunctionalTest
 {
     private string $fixturePath;
@@ -67,6 +69,34 @@ class GeneratorTest extends BaseFunctionalTest
 
         if ($titleFile) {
             $this->assertTrue(str_contains($titleFile, '<title>Foo</title>'));
+        }
+    }
+
+    public function testLocalizedLinks(): void
+    {
+        $this->assertDirectoryExists($this->outputPath . '/fr');
+        $this->assertDirectoryExists($this->outputPath . '/en');
+
+        $this->assertFileExists($this->outputPath . '/fr/news/index.html');
+        $this->assertFileExists($this->outputPath . '/en/news/index.html');
+
+        $frenchFile = file_get_contents($this->outputPath . '/fr/news/index.html');
+        $englishFile = file_get_contents($this->outputPath . '/en/news/index.html');
+
+        if ($frenchFile) {
+            $frenchLinkTargets = HtmlCrawler::getLinkTargets($frenchFile);
+
+            foreach ($frenchLinkTargets as $target) {
+                $this->assertStringContainsString('/fr/', $target);
+            }
+        }
+
+        if ($englishFile) {
+            $englishLinkTargets = HtmlCrawler::getLinkTargets($englishFile);
+
+            foreach ($englishLinkTargets as $target) {
+                $this->assertStringContainsString('/en/', $target);
+            }
         }
     }
 }

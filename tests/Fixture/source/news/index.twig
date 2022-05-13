@@ -4,7 +4,7 @@
     <h1>News</h1>
     <ul>
         {% for page in site.select('type', 'article') %}
-            <li><a href="{{ page.getOutput(currentLocale).relativePath }}">{{ template.context.description }}</a></li>
+            <li><a href="{{ page.output.relativePath }}">{{ page.context['description'] }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

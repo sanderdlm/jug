@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Jug;
 
-use DOMDocument;
-use DOMElement;
+use Jug\Crawler\HtmlCrawler;
 use Jug\Domain\Page;
 use Jug\Domain\Site;
 use Jug\Event\AfterBuild;
@@ -81,7 +80,7 @@ final class Generator
         $outputPath = $this->builder->buildOutputPath($page->source->relativePath);
 
         if ($locale !== null) {
-            $renderedTemplate = $this->makeInternalLinksLocaleAware($renderedTemplate, $locale);
+            $renderedTemplate = HtmlCrawler::makeInternalLinksLocaleAware($renderedTemplate, $locale);
 
             $outputPath = $locale . DIRECTORY_SEPARATOR . $outputPath;
         }
@@ -139,36 +138,6 @@ final class Generator
         }
 
         file_put_contents($this->site->config->getString('image_cache'), json_encode($cache));
-    }
-
-    private function makeInternalLinksLocaleAware(string $html, string $locale): string
-    {
-        libxml_use_internal_errors(true);
-        $dom = new DOMDocument();
-        $dom->loadHTML($html);
-        libxml_use_internal_errors(false);
-
-        $nodes = $dom->getElementsByTagName('a');
-
-        /** @var DOMElement $node */
-        foreach ($nodes as $node) {
-            $link = $node->getAttribute('href');
-            if (str_contains($link, '.html')) {
-                if (!str_starts_with($link, '/')) {
-                    $link = '/' . $link;
-                }
-
-                $node->setAttribute('href', '/' . $locale . $link);
-            }
-        }
-
-        $output = $dom->saveHTML();
-
-        if ($output) {
-            return $output;
-        }
-
-        return $html;
     }
 
     private function addHash(string $assetFolder): void
