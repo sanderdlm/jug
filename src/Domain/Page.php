@@ -5,7 +5,7 @@ namespace Jug\Domain;
 class Page
 {
     /**
-     * @param array<string, string> $context
+     * @param array<string, mixed> $context
      */
     public function __construct(
         public readonly File $source,
