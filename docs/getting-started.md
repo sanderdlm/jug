@@ -31,7 +31,7 @@ composer require dreadnip/jug
 
 * `./vendor/bin/jug build` builds the site, once.
 * `./vendor/bin/jug serve` launches the PHP built-in webserver and watches all files in the source folder for changes. The site will be rebuilt on every change.
-* `./vendor/bin/jug init` generate a blank project skeleton.
+* `./vendor/bin/jug init` generate a blank project skeleton. Can only be used once.
 
 ## Configuration
 
@@ -54,3 +54,13 @@ return [
     'image_cache' => 'images.json',
 ];
 ```
+When your site is built, the content of this array is parsed and loaded into the `Config` object, which is then attached to the `Site` object.
+
+The following methods are available on the configuration object:
+* has(key)
+* get(key)
+* all()
+* add(key, value)
+* getString(key)
+* getArray(key)
+

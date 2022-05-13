@@ -64,4 +64,4 @@ And then collect all those templates
     <li><a href="{{ page.getOutput.relativePath }}">{{ page.context['description'] }}</a></li>
 {% endfor %}
 ```
-The select method gives you the ability to group pages and render index or overview pages for them. You can use it to build blogs, or simply categorize pages together.
+The select method gives you the ability to group pages and render index or overview pages for them. You can use it to build a blog, or simply categorize pages together.

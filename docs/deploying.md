@@ -6,6 +6,8 @@
 git subtree push --prefix <your-output-folder> origin gh-pages
 ```
 
+See [Creating a GitHub Pages site](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
+
 ## Your own host
 ```shell
 #!/bin/bash
