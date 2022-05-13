@@ -5,4 +5,9 @@
 {% block main %}
     <h1>Jug</h1>
     <p>This is a testing template</p>
+    <ul>
+    {% for tag in site.config.get('tags') %}
+        <li>{{ tag }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}

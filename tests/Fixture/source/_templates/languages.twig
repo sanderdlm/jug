@@ -1,6 +1,6 @@
-{% if locales|length > 1 %}
+{% if site.config.get('locales')|length > 1 %}
 <div class="language-dropdown">
-  {% for locale in locales %}
+  {% for locale in site.config.get('locales') %}
   <a href="/{{ locale }}/">{{ locale|trans }}</a>{% if not loop.last %}/{% endif %}
   {% endfor %}
 </div>
