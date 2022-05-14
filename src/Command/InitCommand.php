@@ -92,7 +92,8 @@ class InitCommand extends Command
         
         {% block content %}
             <h1>Welcome 👋</h1>
-            <p>Thanks for checking out Jug! You can get started building your site right away.</p>
+            <p>Thanks for checking out Jug!</p>
+            <p>Start your site by modifying this template.</p>
             <p>If you have any questions, please check out <a href="https://github.com/dreadnip/jug/tree/master/docs">the documentation</a>.</p>
         {% endblock %}
         DOC;

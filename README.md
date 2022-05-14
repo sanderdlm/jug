@@ -1,6 +1,6 @@
 # Jug
 
-Jug is a very basic static site generator that turns Twig templates into straight HTML.
+Jug is a minimal static site generator that turns Twig templates into HTML.
 
 It uses Twig and other Symfony components, so it should feel familiar for people with Symfony experience.
 
@@ -13,6 +13,19 @@ It uses Twig and other Symfony components, so it should feel familiar for people
 * Easy, PHP based config
 * Events to customize the build before & after
 
-Take a look at [the docs](docs/README.md) for more information.
+## Getting started
 
-You can check out the tests/Fixture folder for a dummy example of a Jug website, or take a look at the [example repository](https://github.com/dreadnip/jug-template) to see it in use.
+Make a new project directory, install the package using composer and run the init command.
+```
+composer require dreadnip/jug
+./vendor/bin/jug init
+```
+You'll end up with a simple, one-page website skeleton. 
+
+Run the `serve` command to view your site!
+```
+./vendor/bin/jug serve
+```
+## What's next
+
+Take a look at [the docs](docs/README.md) for more information.
