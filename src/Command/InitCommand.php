@@ -94,7 +94,10 @@ class InitCommand extends Command
             <h1>Welcome 👋</h1>
             <p>Thanks for checking out Jug!</p>
             <p>Start your site by modifying this template.</p>
-            <p>If you have any questions, please check out <a href="https://github.com/dreadnip/jug/tree/master/docs">the documentation</a>.</p>
+            <p>
+                If you have any questions, please check out 
+                <a href="https://github.com/dreadnip/jug/tree/master/docs">the documentation</a>.
+            </p>
         {% endblock %}
         DOC;
     }
@@ -109,7 +112,8 @@ class InitCommand extends Command
         }
         
         body {
-            font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+            font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,Arial,Noto Sans,
+            sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
             font-size: 1.3rem;
             color: #333;
             overflow-y: scroll;
