@@ -12,7 +12,7 @@ class ConfigException extends Exception
         string $key,
     ): self {
         return new self(sprintf(
-            'Missing required config key "%s".',
+            'There is no configuration value defined for key "%s".',
             $key
         ));
     }
