@@ -6,16 +6,9 @@ use Jug\Crawler\HtmlCrawler;
 
 class GeneratorTest extends BaseFunctionalTest
 {
-    private string $fixturePath;
-    private string $outputPath;
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->fixturePath = __DIR__ . '/Fixture';
-        $this->outputPath = __DIR__ . '/Fixture/output';
-
-        $this->generator->generate();
     }
 
     public function testSiteGeneration(): void

@@ -28,9 +28,14 @@ abstract class BaseFunctionalTest extends TestCase
     protected Site $site;
     protected Builder $builder;
     protected Generator $generator;
+    protected string $fixturePath;
+    protected string $outputPath;
 
     protected function setUp(): void
     {
+        $this->fixturePath = __DIR__ . '/Fixture';
+        $this->outputPath = __DIR__ . '/Fixture/output';
+
         $filesystem = new Filesystem();
 
         $config = require 'Fixture/config.php';
@@ -80,9 +85,12 @@ abstract class BaseFunctionalTest extends TestCase
 
         // Create the site data object
         $this->builder = new Builder($config, $parser);
-        $this->site = $this->builder->build();
 
         // Create the site generator object
         $this->generator = new Generator($this->builder, $twig, $filesystem, $dispatcher);
+
+        $this->generator->generate();
+
+        $this->site = $this->generator->getSite();
     }
 }
