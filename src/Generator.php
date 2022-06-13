@@ -77,7 +77,7 @@ final class Generator
             ]
         );
 
-        $outputPath = $this->builder->buildOutputPath($page->source->relativePath);
+        $outputPath = $page->output->relativePath;
 
         if ($locale !== null) {
             $renderedTemplate = HtmlCrawler::makeInternalLinksLocaleAware($renderedTemplate, $locale);
