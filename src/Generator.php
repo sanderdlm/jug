@@ -73,6 +73,7 @@ final class Generator
             $page->source->relativePath,
             [
                 'site' => $this->site,
+                'page' => $page,
                 'currentLocale' => $locale
             ]
         );
