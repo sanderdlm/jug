@@ -9,7 +9,6 @@ use Jug\Exception\ConfigException;
 use Jug\Exception\FileSystemException;
 use Jug\Twig\AssetExtension;
 use Jug\Twig\DynamicFilesystemLoader;
-use Jug\Twig\FolderExtension;
 use Jug\Twig\HighlightExtension;
 use Jug\Twig\MarkdownExtension;
 use Jug\Twig\Parser;
@@ -93,7 +92,6 @@ class Kernel
         $twig->addExtension(new MarkdownExtension(new MarkdownExtra()));
         $twig->addExtension(new HighlightExtension());
         $twig->addExtension(new SqliteExtension());
-        $twig->addExtension(new FolderExtension());
 
         $dispatcher = new EventDispatcher();
 

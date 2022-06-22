@@ -27,11 +27,24 @@ final class Site
             $this->pages,
             function (Page $page) use ($key, $value) {
                 if ($value === null) {
-                    return \array_key_exists($key, $page->context);
+                    return array_key_exists($key, $page->context);
                 } else {
-                    return \array_key_exists($key, $page->context) &&
+                    return array_key_exists($key, $page->context) &&
                         $page->context[$key] === $value;
                 }
+            }
+        );
+    }
+
+    /**
+     * @return array<int, Page>
+     */
+    public function dir(string $folder): array
+    {
+        return array_filter(
+            $this->pages,
+            function (Page $page) use ($folder) {
+                return str_contains($page->output->relativePath, $folder . DIRECTORY_SEPARATOR);
             }
         );
     }
