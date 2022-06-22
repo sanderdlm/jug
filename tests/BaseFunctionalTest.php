@@ -8,7 +8,6 @@ use Jug\Domain\Site;
 use Jug\Generator;
 use Jug\Twig\AssetExtension;
 use Jug\Twig\DynamicFilesystemLoader;
-use Jug\Twig\FolderExtension;
 use Jug\Twig\HighlightExtension;
 use Jug\Twig\MarkdownExtension;
 use Jug\Twig\Parser;
@@ -79,7 +78,6 @@ abstract class BaseFunctionalTest extends TestCase
         $twig->addExtension(new MarkdownExtension(new MarkdownExtra()));
         $twig->addExtension(new HighlightExtension());
         $twig->addExtension(new SqliteExtension());
-        $twig->addExtension(new FolderExtension());
 
         $parser = new Parser($twig);
 

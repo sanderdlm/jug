@@ -3,7 +3,7 @@
 {% block main %}
     <h1>Demo</h1>
     <ul>
-        {% for name, path in dir('tests/Fixture/source/demo') %}
+        {% for name, path in site.dir('tests/Fixture/source/demo') %}
             {% if name != 'index' %}
             <li><a href="{{ path }}">{{ name }}</a></li>
             {% endif %}
