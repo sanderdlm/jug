@@ -57,8 +57,8 @@ final class Site
         $finder = new Finder();
         $paths = [$this->config->getString('source')];
 
-        foreach ($finder->in($this->config->getString('source'))->directories() as $directory) {
-            $paths[] = $directory->getPathname();
+        foreach ($finder->in($this->config->getString('source')) as $sourceItem) {
+            $paths[] = $sourceItem->getPathname();
         }
 
         return $paths;
