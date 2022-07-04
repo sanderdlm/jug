@@ -8,6 +8,10 @@ class HtmlCrawler
 {
     public static function makeInternalLinksLocaleAware(string $html, string $locale): string
     {
+        if ($html === '') {
+            return '';
+        }
+
         $crawler = new Crawler($html);
 
         foreach ($crawler->filterXPath('//a') as $linkNode) {
