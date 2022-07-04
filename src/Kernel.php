@@ -13,7 +13,7 @@ use Jug\Twig\HighlightExtension;
 use Jug\Twig\MarkdownExtension;
 use Jug\Twig\Parser;
 use Jug\Twig\SqliteExtension;
-use Michelf\MarkdownExtra;
+use ParsedownExtra;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
@@ -89,7 +89,7 @@ class Kernel
 
         $twig->addExtension(new TranslationExtension($translator));
         $twig->addExtension(new AssetExtension($config));
-        $twig->addExtension(new MarkdownExtension(new MarkdownExtra()));
+        $twig->addExtension(new MarkdownExtension(new ParsedownExtra()));
         $twig->addExtension(new HighlightExtension());
         $twig->addExtension(new SqliteExtension());
 

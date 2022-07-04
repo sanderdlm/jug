@@ -2,7 +2,7 @@
 
 namespace Jug\Twig;
 
-use Michelf\MarkdownExtra;
+use ParsedownExtra;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use Twig\TwigFilter;
@@ -10,7 +10,7 @@ use Twig\TwigFilter;
 class MarkdownExtension extends AbstractExtension
 {
     public function __construct(
-        private MarkdownExtra $parser
+        private ParsedownExtra $parser
     ) {
     }
 
@@ -46,7 +46,7 @@ class MarkdownExtension extends AbstractExtension
             $content = preg_replace("{^$white}m", '', $content) ?? $content;
         }
 
-        return $this->parser->transform($content);
+        return $this->parser->text($content);
     }
 
     private function getFile(string $path): ?string

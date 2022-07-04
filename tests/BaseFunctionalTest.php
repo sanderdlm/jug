@@ -12,7 +12,7 @@ use Jug\Twig\HighlightExtension;
 use Jug\Twig\MarkdownExtension;
 use Jug\Twig\Parser;
 use Jug\Twig\SqliteExtension;
-use Michelf\MarkdownExtra;
+use ParsedownExtra;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -75,7 +75,7 @@ abstract class BaseFunctionalTest extends TestCase
         $twig->addExtension(new DebugExtension());
         $twig->addExtension(new TranslationExtension($translator));
         $twig->addExtension(new AssetExtension($config));
-        $twig->addExtension(new MarkdownExtension(new MarkdownExtra()));
+        $twig->addExtension(new MarkdownExtension(new ParsedownExtra()));
         $twig->addExtension(new HighlightExtension());
         $twig->addExtension(new SqliteExtension());
 
