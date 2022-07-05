@@ -64,6 +64,9 @@ final class Site
         return $paths;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function tree(): array
     {
         $tree = [];
