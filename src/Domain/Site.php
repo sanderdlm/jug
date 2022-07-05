@@ -63,4 +63,21 @@ final class Site
 
         return $paths;
     }
+
+    public function tree(): array
+    {
+        $tree = [];
+
+        foreach ($this->pages as $page) {
+            $parts = explode(DIRECTORY_SEPARATOR, $page->output->relativePath);
+            $lastPart = &$tree;
+            foreach ($parts as $part) {
+                $lastPart = &$lastPart[$part];
+            }
+
+            $lastPart = $page;
+        }
+
+        return $tree;
+    }
 }
