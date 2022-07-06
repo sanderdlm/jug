@@ -10,5 +10,5 @@ return [
     ],
     'hash' => bin2hex(random_bytes(4)),
     'year' => (new DateTime('now'))->format('Y'),
-    'image_cache' => 'images.json',
+    'image_cache' => 'tests/Fixture/images.json',
 ];
