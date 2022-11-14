@@ -29,6 +29,15 @@ class SiteTest extends BaseFunctionalTest
         }
     }
 
+    public function testTags(): void
+    {
+        $pagesWithTags = $this->site->select('tags');
+
+        foreach ($pagesWithTags as $page) {
+            $this->assertIsArray($page->context['tags']);
+        }
+    }
+
     public function testSiteDir(): void
     {
         $newsFolderContent = $this->site->dir('news');

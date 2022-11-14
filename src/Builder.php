@@ -8,14 +8,12 @@ use Jug\Config\Config;
 use Jug\Domain\File;
 use Jug\Domain\Page;
 use Jug\Domain\Site;
-use Jug\Twig\Parser;
 use Symfony\Component\Finder\Finder;
 
 final class Builder
 {
     public function __construct(
-        private readonly Config $config,
-        private readonly Parser $parser
+        private readonly Config $config
     ) {
     }
 
@@ -41,7 +39,6 @@ final class Builder
             $pages[] = new Page(
                 new File($file->getRelativePathname()),
                 new File($this->buildOutputPath($file->getRelativePathname())),
-                $this->parser->parse($file->getRelativePathname())
             );
         }
 
