@@ -2,6 +2,7 @@
 
 namespace Jug\Twig;
 
+use Jug\Domain\Site;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -16,6 +17,9 @@ class ContextExtension extends AbstractExtension
         ];
     }
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function addContext(array $context): void
     {
         $contextCopy = $context;
@@ -23,7 +27,10 @@ class ContextExtension extends AbstractExtension
         unset($contextCopy['page']);
         unset($contextCopy['currentLocale']);
 
-        foreach ($context['site']->pages as $page) {
+        /** @var Site $siteObject */
+        $siteObject = $context['site'];
+
+        foreach ($siteObject->pages as $page) {
             if ($page === $context['page']) {
                 $page->addContext($contextCopy);
             }

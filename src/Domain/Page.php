@@ -14,6 +14,9 @@ class Page
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function addContext(array $context): void
     {
         $this->context = $context;
