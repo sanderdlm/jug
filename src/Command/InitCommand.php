@@ -71,7 +71,7 @@ class InitCommand extends Command
         <html lang="en">
         <head>
             <meta charset="utf-8">
-            <title>Your new site</title>
+            <title>{{ title ?? '🍃 Your new site' }}</title>
             <meta name="description" content="Your new site">
             <meta name="author" content="You">
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -89,6 +89,8 @@ class InitCommand extends Command
     {
         return <<<DOC
         {% extends 'base.twig' %}
+        
+        {% set title = '👋 Welcome to Jug!' %}
         
         {% block content %}
             <h1>Welcome 👋</h1>
