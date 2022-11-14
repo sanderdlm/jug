@@ -19,7 +19,7 @@ final class Builder
     ) {
     }
 
-    public function build(): Site
+    public function buildSiteObject(): Site
     {
         return new Site($this->config, $this->collectPages());
     }

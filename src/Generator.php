@@ -31,7 +31,7 @@ final class Generator
 
     public function generate(): void
     {
-        $this->site = $this->builder->build();
+        $this->site = $this->builder->buildSiteObject();
 
         $this->dispatcher->dispatch(new BeforeBuild($this->site), BeforeBuild::NAME);
 
