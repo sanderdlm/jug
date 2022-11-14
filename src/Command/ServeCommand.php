@@ -78,8 +78,8 @@ class ServeCommand extends Command
 
     private function watchFiles(Generator $generator, OutputInterface $output): void
     {
-        $sourceFolders = $generator->getSite()->getSourceFolders();
-        $paths = ['config.php', ...$sourceFolders];
+        $sourceFiles = $generator->getSite()->getSourceFiles();
+        $paths = ['config.php', ...$sourceFiles];
 
         if (is_file('events.php')) {
             $paths[] = 'events.php';

@@ -52,12 +52,12 @@ final class Site
     /**
      * @return array<string>
      */
-    public function getSourceFolders(): array
+    public function getSourceFiles(): array
     {
         $finder = new Finder();
         $paths = [];
 
-        foreach ($finder->in($this->config->getString('source')) as $sourceItem) {
+        foreach ($finder->in($this->config->getString('source'))->files() as $sourceItem) {
             $paths[] = $sourceItem->getPathname();
         }
 
