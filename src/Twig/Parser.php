@@ -5,6 +5,7 @@ namespace Jug\Twig;
 use Twig\Environment;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\SetNode;
@@ -87,6 +88,8 @@ class Parser
 
         foreach ($parent as $child) {
             if ($child instanceof ArrayExpression) {
+                $matches[] = $this->getNodes($child, ConstantExpression::class);
+            } elseif ($child instanceof AbstractBinary) {
                 $matches[] = $this->getNodes($child, ConstantExpression::class);
             } else {
                 if (
