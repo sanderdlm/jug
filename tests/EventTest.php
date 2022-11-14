@@ -4,11 +4,8 @@ namespace Jug\Test;
 
 class EventTest extends BaseFunctionalTest
 {
-    public function testDynamicConfigValueFromBeforeEvent(): void
+    public function testDynamicConfigValueFromEventEvent(): void
     {
-        $fixtureTags = ['he', 'is', 'a', 'smooth', 'operator'];
-
-        $this->assertIsArray($this->site->config->getarray('tags'));
-        $this->assertEquals($fixtureTags, $this->site->config->getArray('tags'));
+        $this->assertTrue($this->site->config->get('a_dynamic_setting'));
     }
 }
