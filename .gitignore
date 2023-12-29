@@ -3,3 +3,4 @@ composer.lock
 .phpcs-cache
 .phpunit.result.cache
 tests/Fixture/output
+.idea

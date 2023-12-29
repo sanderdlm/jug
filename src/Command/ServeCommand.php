@@ -51,7 +51,7 @@ class ServeCommand extends Command
 
         $output->writeln(' <info>Done!</info>');
 
-        $server = $this->startWebServer($generator->getSite()->config, $input, $output);
+        $this->startWebServer($generator->getSite()->config, $input, $output);
 
         $this->watchFiles($generator, $output);
 
@@ -80,17 +80,26 @@ class ServeCommand extends Command
     {
         $sourceFiles = $generator->getSite()->getSourceFiles();
         $paths = ['config.php', ...$sourceFiles];
+        $map = [];
 
         if (is_file('events.php')) {
             $paths[] = 'events.php';
         }
 
-        (new InotifyConsumerFactory())
-            ->registerSubscriber(new InotifyModifiedSubscriber($generator, $output))
-            ->consume(WatchedResourceCollection::fromArray(
-                $paths,
-                InotifyEventCodeEnum::ON_CLOSE_WRITE,
-                'fileChanged'
-            ));
+        foreach ($paths as $path) {
+            $map[$path] = filemtime($path);
+        }
+
+        while (true) {
+            foreach ($map as $path => $lastModified) {
+                if (filemtime($path) > $lastModified) {
+                    $generator->generate();
+                    $output->writeln('<info>Site rebuilt</info>');
+                    $map[$path] = filemtime($path);
+                }
+            }
+
+            sleep(1);
+        }
     }
 }
