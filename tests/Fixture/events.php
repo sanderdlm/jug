@@ -11,12 +11,27 @@ return static function (EventDispatcher $dispatcher): void {
     $dispatcher->addListener(BeforeBuild::NAME, function (Event $event) {
         /** @var BeforeBuild $beforeBuild */
         $beforeBuild = $event;
+
+        /*
+         * An example of what you can build with the before event would be a tag cloud.
+         */
+        $tags = [];
+        foreach ($beforeBuild->site->select('tags') as $page) {
+            if (
+                array_key_exists('tags', $page->context) &&
+                is_array($page->context['tags'])
+            ) {
+                foreach ($page->context['tags'] as $tag) {
+                    $tags[] = $tag;
+                }
+            }
+        }
+
+        $beforeBuild->site->config->add('tags', $tags);
     });
 
     $dispatcher->addListener(AfterBuild::NAME, function (Event $event) {
         /** @var AfterBuild $afterBuild */
         $afterBuild = $event;
-
-        $afterBuild->site->config->add('a_dynamic_setting', true);
     });
 };

@@ -10,7 +10,7 @@ use Jug\Twig\AssetExtension;
 use Jug\Twig\DynamicFilesystemLoader;
 use Jug\Twig\HighlightExtension;
 use Jug\Twig\MarkdownExtension;
-use Jug\Twig\ContextExtension;
+use Jug\Twig\Parser;
 use Jug\Twig\SqliteExtension;
 use ParsedownExtra;
 use PHPUnit\Framework\TestCase;
@@ -78,10 +78,11 @@ abstract class BaseFunctionalTest extends TestCase
         $twig->addExtension(new MarkdownExtension(new ParsedownExtra()));
         $twig->addExtension(new HighlightExtension());
         $twig->addExtension(new SqliteExtension());
-        $twig->addExtension(new ContextExtension());
+
+        $parser = new Parser($twig);
 
         // Create the site data object
-        $this->builder = new Builder($config);
+        $this->builder = new Builder($config, $parser);
 
         // Create the site generator object
         $this->generator = new Generator($this->builder, $twig, $filesystem, $dispatcher);

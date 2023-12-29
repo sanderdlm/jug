@@ -11,7 +11,7 @@ use Jug\Twig\AssetExtension;
 use Jug\Twig\DynamicFilesystemLoader;
 use Jug\Twig\HighlightExtension;
 use Jug\Twig\MarkdownExtension;
-use Jug\Twig\ContextExtension;
+use Jug\Twig\Parser;
 use Jug\Twig\SqliteExtension;
 use ParsedownExtra;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -92,7 +92,6 @@ class Kernel
         $twig->addExtension(new MarkdownExtension(new ParsedownExtra()));
         $twig->addExtension(new HighlightExtension());
         $twig->addExtension(new SqliteExtension());
-        $twig->addExtension(new ContextExtension());
 
         $dispatcher = new EventDispatcher();
 
@@ -101,8 +100,10 @@ class Kernel
             $eventFactory($dispatcher);
         }
 
+        $parser = new Parser($twig);
+
         // Create the site data object
-        $siteBuilder = new Builder($config);
+        $siteBuilder = new Builder($config, $parser);
 
         // Create the site generator object
         return new Generator($siteBuilder, $twig, $this->filesystem, $dispatcher);
