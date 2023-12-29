@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Jug\Command;
 
-use Inotify\InotifyConsumerFactory;
-use Inotify\InotifyEventCodeEnum;
-use Inotify\WatchedResourceCollection;
 use Jug\Config\Config;
-use Jug\EventSubscriber\InotifyModifiedSubscriber;
 use Jug\Generator;
 use Jug\Kernel;
 use Symfony\Component\Console\Attribute\AsCommand;
