@@ -37,6 +37,8 @@ class InitCommand extends Command
 
         $this->filesystem->mkdir('source/_templates');
         $this->filesystem->mkdir('source/assets/css');
+        $this->filesystem->mkdir('source/assets/images');
+        $this->filesystem->mkdir('source/assets/js');
         $this->filesystem->touch('source/assets/images/.gitignore');
         $this->filesystem->touch('source/assets/js/.gitignore');
 
