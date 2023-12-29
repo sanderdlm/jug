@@ -70,7 +70,6 @@ class InitCommand extends Command
     private function getDefaultBaseTemplate(): string
     {
         return <<<DOC
-        {{ parseContext() }}
         <!DOCTYPE html>
         <html lang="en">
         <head>
