@@ -90,6 +90,7 @@ class ServeCommand extends Command
             $map[$path] = filemtime($path);
         }
 
+        /** @phpstan-ignore-next-line */
         while (true) {
             foreach ($map as $path => $lastModified) {
                 if (filemtime($path) > $lastModified) {
