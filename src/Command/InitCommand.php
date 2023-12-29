@@ -36,15 +36,16 @@ class InitCommand extends Command
         $this->filesystem->appendToFile('config.php', $this->getDefaultConfig());
 
         $this->filesystem->mkdir('source/_templates');
-        $this->filesystem->mkdir('source/assets/images');
         $this->filesystem->mkdir('source/assets/css');
-        $this->filesystem->mkdir('source/assets/js');
+        $this->filesystem->touch('source/assets/images/.gitignore');
+        $this->filesystem->touch('source/assets/js/.gitignore');
 
         $this->filesystem->appendToFile('source/assets/css/style.css', $this->getDefaultStylesheet());
         $this->filesystem->appendToFile('source/_templates/base.twig', $this->getDefaultBaseTemplate());
         $this->filesystem->appendToFile('source/index.twig', $this->getDefaultIndexTemplate());
+        $this->filesystem->appendToFile('.gitignore', 'vendor' . PHP_EOL . 'output' . PHP_EOL . 'composer.lock');
 
-        $output->writeln(' <info>Done!</info>');
+        $output->writeln('<info>Done!</info>');
 
         return Command::SUCCESS;
     }
