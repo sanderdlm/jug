@@ -79,7 +79,7 @@ class InitCommand extends Command
             <meta name="description" content="Your new site">
             <meta name="author" content="You">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/style.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
         </head>
         <body>
             {% block content %}{% endblock %}
