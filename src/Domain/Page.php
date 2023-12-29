@@ -10,15 +10,7 @@ class Page
     public function __construct(
         public readonly File $source,
         public readonly File $output,
-        public array $context = []
+        public readonly array $context = []
     ) {
-    }
-
-    /**
-     * @param array<string, mixed> $context
-     */
-    public function addContext(array $context): void
-    {
-        $this->context = $context;
     }
 }

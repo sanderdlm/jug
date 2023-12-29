@@ -6,10 +6,8 @@
     <h1>Jug</h1>
     <p>This is a testing template</p>
     <ul>
-    {% for page in site.select('tags') %}
-        {% for tag in page.context['tags'] %}
-            <li>{{ tag }}</li>
-        {% endfor %}
+    {% for tag in site.config.get('tags') %}
+        <li>{{ tag }}</li>
     {% endfor %}
     </ul>
 {% endblock %}
