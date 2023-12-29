@@ -8,82 +8,55 @@ on:
 
 jobs:
   phpstan:
-    runs-on: "ubuntu-20.04"
-    
-    strategy:
-      matrix:
-        php-version:
-          - "8.1"
+    runs-on: "ubuntu-latest"
 
     steps:
     - name: "Checkout code"
-      uses: "actions/checkout@v2"
+      uses: "actions/checkout@v4"
 
     - name: "Install PHP"
       uses: "shivammathur/setup-php@v2"
       with:
-        extensions: inotify
-        coverage: "none"
-        php-version: "${{ matrix.php-version }}"
+        php-version: "8.2"
 
     - name: "Install dependencies with Composer"
-      uses: "ramsey/composer-install@v1"
-      with:
-        dependency-versions: "highest"
+      uses: "ramsey/composer-install@v2"
 
     - name: "Run a static analysis with phpstan/phpstan"
       run: "vendor/bin/phpstan analyse"
       
   phpcs:
-    runs-on: "ubuntu-20.04"
-    
-    strategy:
-      matrix:
-        php-version:
-          - "8.1"
+    runs-on: "ubuntu-latest"
 
     steps:
     - name: "Checkout code"
-      uses: "actions/checkout@v2"
+      uses: "actions/checkout@v4"
 
     - name: "Install PHP"
       uses: "shivammathur/setup-php@v2"
       with:
-        extensions: inotify
-        coverage: "none"
-        php-version: "${{ matrix.php-version }}"
+        php-version: "8.2"
 
     - name: "Install dependencies with Composer"
-      uses: "ramsey/composer-install@v1"
-      with:
-        dependency-versions: "highest"
+      uses: "ramsey/composer-install@v2"
 
     - name: "Run phpcs"
       run: "vendor/bin/phpcs"
 
   phpunit:
-    runs-on: "ubuntu-20.04"
-
-    strategy:
-      matrix:
-        php-version:
-          - "8.1"
+    runs-on: "ubuntu-latest"
 
     steps:
       - name: "Checkout code"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v4"
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          extensions: inotify
-          coverage: "none"
-          php-version: "${{ matrix.php-version }}"
+          php-version: "8.2"
 
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v1"
-        with:
-          dependency-versions: "highest"
+        uses: "ramsey/composer-install@v2"
 
       - name: Install image optimizers
         run: sudo apt install jpegoptim optipng -y
