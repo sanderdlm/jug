@@ -82,6 +82,13 @@ class ServeCommand extends Command
             $paths[] = 'events.php';
         }
 
+        // Watch translation files
+        if (is_dir('translations')) {
+            foreach (glob('translations/*.yaml') ?: [] as $translationFile) {
+                $paths[] = $translationFile;
+            }
+        }
+
         foreach ($paths as $path) {
             $map[$path] = filemtime($path);
         }
@@ -89,10 +96,13 @@ class ServeCommand extends Command
         /** @phpstan-ignore-next-line */
         while (true) {
             foreach ($map as $path => $lastModified) {
+                clearstatcache(true, $path);
                 if (filemtime($path) > $lastModified) {
+                    $generator = $this->kernel->buildGenerator();
                     $generator->generate();
                     $output->writeln('<info>Site rebuilt</info>');
                     $map[$path] = filemtime($path);
+                    break;
                 }
             }
 
