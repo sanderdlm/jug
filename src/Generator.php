@@ -50,6 +50,16 @@ final class Generator
                     $this->renderTemplate($page, $outputFolder, $locale);
                 }
             }
+
+            // Generate root index.html redirecting to default locale
+            $defaultLocale = $this->site->config->getString('default_locale');
+            $this->filesystem->dumpFile(
+                $outputFolder . DIRECTORY_SEPARATOR . 'index.html',
+                sprintf(
+                    '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/%s/"></head><body></body></html>',
+                    $defaultLocale
+                )
+            );
         } else {
             foreach ($this->site->pages as $page) {
                 $this->renderTemplate($page, $outputFolder);
