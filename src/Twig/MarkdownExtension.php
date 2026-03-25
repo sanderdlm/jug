@@ -46,7 +46,8 @@ class MarkdownExtension extends AbstractExtension
             $content = preg_replace("{^$white}m", '', $content) ?? $content;
         }
 
-        return $this->parser->text($content);
+        // ParsedownExtra 0.8.x triggers "Undefined array key" warnings on PHP 8.x
+        return @$this->parser->text($content);
     }
 
     private function getFile(string $path): ?string

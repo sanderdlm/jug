@@ -53,12 +53,12 @@ final class Generator
 
             // Generate root index.html redirecting to default locale
             $defaultLocale = $this->site->config->getString('default_locale');
+            $redirect = '<!DOCTYPE html><html><head>'
+                . '<meta http-equiv="refresh" content="0;url=/%s/">'
+                . '</head><body></body></html>';
             $this->filesystem->dumpFile(
                 $outputFolder . DIRECTORY_SEPARATOR . 'index.html',
-                sprintf(
-                    '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/%s/"></head><body></body></html>',
-                    $defaultLocale
-                )
+                sprintf($redirect, $defaultLocale)
             );
         } else {
             foreach ($this->site->pages as $page) {

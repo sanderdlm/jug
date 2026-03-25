@@ -92,10 +92,7 @@ class Parser
             } elseif ($child instanceof AbstractBinary) {
                 $matches[] = $this->getNodes($child, ConstantExpression::class);
             } else {
-                if (
-                    $child instanceof $nodeClass &&
-                    is_subclass_of($child, Node::class)
-                ) {
+                if ($child instanceof $nodeClass) {
                     $matches[] = $child;
                 }
             }
