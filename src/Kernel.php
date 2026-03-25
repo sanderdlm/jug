@@ -34,13 +34,15 @@ class Kernel
             throw FileSystemException::missingFile('config.php');
         }
 
-        $config = require 'config.php';
+        $config = require 'config.php'; // @phpstan-ignore require.fileNotFound
 
         if (!is_array($config)) {
             throw ConfigException::malformedContent();
         }
 
-        $config = new Config($config);
+        /** @var array<string, mixed> $configArray */
+        $configArray = $config;
+        $config = new Config($configArray);
 
         if (
             !$config->has('source') ||
@@ -71,16 +73,15 @@ class Kernel
 
         if ($config->has('locales')) {
             foreach ($config->getArray('locales') as $locale) {
-                $translationPath = 'translations/messages.' . $locale . '.yaml';
-
                 assert(is_string($locale));
+                $translationPath = 'translations/messages.' . $locale . '.yaml';
 
                 if (is_file($translationPath)) {
                     $translator->addResource('yaml', $translationPath, $locale);
                 }
             }
         } else {
-            $translationPath = 'translations/messages.' . $config->get('default_locale') . '.yaml';
+            $translationPath = 'translations/messages.' . $config->getString('default_locale') . '.yaml';
 
             if (is_file($translationPath)) {
                 $translator->addResource('yaml', $translationPath, $config->getString('default_locale'));
@@ -96,7 +97,7 @@ class Kernel
         $dispatcher = new EventDispatcher();
 
         if (is_file('events.php')) {
-            $eventFactory = require 'events.php';
+            $eventFactory = require 'events.php'; // @phpstan-ignore require.fileNotFound
             $eventFactory($dispatcher);
         }
 

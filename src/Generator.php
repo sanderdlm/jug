@@ -15,6 +15,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Process\Process;
 use Twig\Environment;
 
 final class Generator
@@ -127,22 +128,30 @@ final class Generator
             $cacheContent = '';
         }
 
-        /** @var array<string, array<string>> $cache */
+        /** @var array<string, mixed> $cache */
         $cache = json_decode($cacheContent, true);
 
         $finder = new Finder();
         $finder->in($imageFolder)->files();
 
-        if (!isset($cache['images']) || !is_array($cache['images'])) {
+        if (!isset($cache['images']) || !is_array($cache['images'])) { // @phpstan-ignore booleanNot.alwaysFalse
             $cache['images'] = [];
         }
 
         foreach ($finder as $image) {
             if (!in_array($image->getRealPath(), $cache['images'])) {
                 if ($image->getExtension() === 'jpeg' || $image->getExtension() === 'jpg') {
-                    shell_exec('jpegoptim -q -m85 -s --all-progressive ' . $image->getRealPath());
+                    $process = new Process([
+                        'jpegoptim', '-q', '-m85', '-s', '--all-progressive',
+                        $image->getRealPath(),
+                    ]);
+                    $process->run();
                 } elseif ($image->getExtension() === 'png') {
-                    shell_exec('optipng -o2 -i 0 -strip all -silent ' . $image->getRealPath());
+                    $process = new Process([
+                        'optipng', '-o2', '-i', '0', '-strip', 'all', '-silent',
+                        $image->getRealPath(),
+                    ]);
+                    $process->run();
                 }
                 $cache['images'][] = $image->getRealPath();
             }
@@ -160,7 +169,7 @@ final class Generator
         foreach ($finder as $file) {
             $extension = $file->getExtension();
             $baseName = $file->getFilenameWithoutExtension();
-            $hashedName = $baseName . '.' . $this->site->config->get('hash') . '.' . $extension;
+            $hashedName = $baseName . '.' . $this->site->config->getString('hash') . '.' . $extension;
 
             $this->filesystem->rename(
                 $file->getRealPath(),

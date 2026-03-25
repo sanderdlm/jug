@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jug\Twig;
 
 use ParsedownExtra;
@@ -28,7 +30,7 @@ class MarkdownExtension extends AbstractExtension
         ];
     }
 
-    public function load(string $path, string $locale = null): ?string
+    public function load(string $path, ?string $locale = null): ?string
     {
         $content = $this->getFile($path) ?? $this->getFile('source/' . $path) ?? null;
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jug\Twig;
 
 use Twig\Environment;
@@ -18,7 +20,7 @@ class Parser
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function parse(string $twigTemplateName): array
     {
@@ -33,7 +35,7 @@ class Parser
     }
 
     /**
-     * @param array<string, string> $variables
+     * @param array<string, mixed> $variables
      */
     private function process(Node $node, array &$variables): void
     {
@@ -63,21 +65,24 @@ class Parser
                          * contains the value for the key that comes right before it.
                          */
                         if ($nestedIndex !== 0 && $nestedIndex % 2 !== 0) {
-                            $key = $correspondingValue[$nestedIndex - 1]->getAttribute('value');
+                            /** @var ConstantExpression $keyNode */
+                            $keyNode = $correspondingValue[$nestedIndex - 1];
+                            /** @var ConstantExpression $nestedValue */
+                            $key = $keyNode->getAttribute('value');
                             $value = $nestedValue->getAttribute('value');
-                            $variables[$definedVariableName][$key] = $value;
+                            $variables[$definedVariableName][$key] = $value; // @phpstan-ignore parameterByRef.type
                         }
                     }
                 } else {
-                    $variables[$definedVariableName] = $correspondingValue->getAttribute('value');
+                    /** @var ConstantExpression $correspondingValue */
+                    $variables[$definedVariableName] = // @phpstan-ignore parameterByRef.type
+                        $correspondingValue->getAttribute('value');
                 }
             }
         }
 
         foreach ($node as $child) {
-            if ($child instanceof Node) {
-                $this->process($child, $variables);
-            }
+            $this->process($child, $variables);
         }
     }
 

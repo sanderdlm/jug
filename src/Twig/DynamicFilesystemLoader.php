@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jug\Twig;
 
 use Twig\Loader\FilesystemLoader;
@@ -9,7 +11,7 @@ class DynamicFilesystemLoader extends FilesystemLoader
     /**
      * @param array<string> $paths
      */
-    public function __construct(array $paths = [], string $rootPath = null)
+    public function __construct(array $paths = [], ?string $rootPath = null)
     {
         parent::__construct($paths, $rootPath);
     }

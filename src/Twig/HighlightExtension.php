@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jug\Twig;
 
 use Twig\Extension\AbstractExtension;

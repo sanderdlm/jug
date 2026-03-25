@@ -34,7 +34,11 @@ class Config
     {
         $value = $this->get($key);
 
-        return strval($value);
+        if (is_string($value)) {
+            return $value;
+        }
+
+        return strval($value); // @phpstan-ignore argument.type
     }
 
     /**

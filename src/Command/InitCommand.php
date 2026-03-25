@@ -29,6 +29,8 @@ class InitCommand extends Command
             $this->filesystem->exists('source/_templates')
         ) {
             $output->writeln(' <error>You can only initialize a new site in a blank folder.</error>');
+
+            return Command::FAILURE;
         }
 
         $output->write('Setting up your new Jug site..');

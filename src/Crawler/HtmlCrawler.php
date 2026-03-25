@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jug\Crawler;
 
 use Symfony\Component\DomCrawler\Crawler;

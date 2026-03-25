@@ -81,6 +81,6 @@ final class Site
             $lastPart = $page;
         }
 
-        return $tree;
+        return $tree; // @phpstan-ignore return.type
     }
 }

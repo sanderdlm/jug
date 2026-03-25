@@ -9,6 +9,9 @@ on:
 jobs:
   phpstan:
     runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version: ["8.2", "8.3", "8.4"]
 
     steps:
     - name: "Checkout code"
@@ -17,7 +20,7 @@ jobs:
     - name: "Install PHP"
       uses: "shivammathur/setup-php@v2"
       with:
-        php-version: "8.2"
+        php-version: "${{ matrix.php-version }}"
 
     - name: "Install dependencies with Composer"
       uses: "ramsey/composer-install@v2"
@@ -27,6 +30,9 @@ jobs:
       
   phpcs:
     runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version: ["8.2", "8.3", "8.4"]
 
     steps:
     - name: "Checkout code"
@@ -35,7 +41,7 @@ jobs:
     - name: "Install PHP"
       uses: "shivammathur/setup-php@v2"
       with:
-        php-version: "8.2"
+        php-version: "${{ matrix.php-version }}"
 
     - name: "Install dependencies with Composer"
       uses: "ramsey/composer-install@v2"
@@ -45,6 +51,9 @@ jobs:
 
   phpunit:
     runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version: ["8.2", "8.3", "8.4"]
 
     steps:
       - name: "Checkout code"
@@ -53,7 +62,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: "8.2"
+          php-version: "${{ matrix.php-version }}"
 
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v2"

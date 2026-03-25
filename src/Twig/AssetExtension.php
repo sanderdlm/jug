@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jug\Twig;
 
 use Jug\Config\Config;
@@ -29,7 +31,7 @@ class AssetExtension extends AbstractExtension
 
         $extension = pathinfo($path, PATHINFO_EXTENSION);
         $baseName = basename($path, ".{$extension}");
-        $hashedFile = $baseName . '.' . $this->config->get('hash') . '.' . $extension;
+        $hashedFile = $baseName . '.' . $this->config->getString('hash') . '.' . $extension;
 
         return str_replace($baseName . '.' . $extension, $hashedFile, $path);
     }

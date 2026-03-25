@@ -95,6 +95,8 @@ class ServeCommand extends Command
 
         /** @phpstan-ignore-next-line */
         while (true) {
+            $rebuilt = false;
+
             foreach ($map as $path => $lastModified) {
                 clearstatcache(true, $path);
                 if (filemtime($path) > $lastModified) {
@@ -102,7 +104,36 @@ class ServeCommand extends Command
                     $generator->generate();
                     $output->writeln('<info>Site rebuilt</info>');
                     $map[$path] = filemtime($path);
+                    $rebuilt = true;
                     break;
+                }
+            }
+
+            // Check for new source files and translation files
+            $currentSourceFiles = $generator->getSite()->getSourceFiles();
+            $currentPaths = ['config.php', ...$currentSourceFiles];
+
+            if (is_file('events.php')) {
+                $currentPaths[] = 'events.php';
+            }
+
+            if (is_dir('translations')) {
+                foreach (glob('translations/*.yaml') ?: [] as $translationFile) {
+                    $currentPaths[] = $translationFile;
+                }
+            }
+
+            $newFiles = array_diff($currentPaths, array_keys($map));
+
+            if (!empty($newFiles)) {
+                foreach ($newFiles as $newFile) {
+                    $map[$newFile] = filemtime($newFile);
+                }
+
+                if (!$rebuilt) {
+                    $generator = $this->kernel->buildGenerator();
+                    $generator->generate();
+                    $output->writeln('<info>Site rebuilt</info>');
                 }
             }
 
